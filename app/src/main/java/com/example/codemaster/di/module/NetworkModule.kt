@@ -1,14 +1,18 @@
 package com.example.codemaster.di.module
 
+import android.content.Context
 import com.example.codemaster.data.source.remote.retrofit.CfCcAPi
 import com.example.codemaster.data.source.remote.retrofit.ContestApi
 import com.example.codemaster.data.source.remote.retrofit.LeetcodeApi
+import com.example.codemaster.data.source.repository.ContestRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Named
+import javax.inject.Singleton
 
 
 @Module
