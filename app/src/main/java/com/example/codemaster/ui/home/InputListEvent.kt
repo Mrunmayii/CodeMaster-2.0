@@ -6,8 +6,6 @@ sealed interface InputListEvent {
     data class OnCFUsernameChange(val CFuserName: String): InputListEvent
     data class OnLCUsernameChange(val LCuserName: String): InputListEvent
 
-    object onSaveClick : InputListEvent
-    object onGetClick : InputListEvent
-
+    object OnClick : InputListEvent
 
 }

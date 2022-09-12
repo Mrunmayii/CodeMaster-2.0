@@ -9,7 +9,8 @@ import androidx.room.PrimaryKey
 data class Username(
 
     @PrimaryKey
-    val Id:Int? = null,
-    val username: String? = null,
-    val contest : String
+    val id: Int = 1,
+    val codechef : String?,
+    val codeforces : String?,
+    val leetcode : String?
 )

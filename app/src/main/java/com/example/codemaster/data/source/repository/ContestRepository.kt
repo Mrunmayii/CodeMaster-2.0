@@ -4,9 +4,11 @@ import com.example.codemaster.data.model.Codechef
 import com.example.codemaster.data.model.Codeforces
 import com.example.codemaster.data.model.Contest
 import com.example.codemaster.data.model.Leetcode
-import com.example.codemaster.data.source.datastore.User
 import com.example.codemaster.data.source.local.enitity.Username
 import kotlinx.coroutines.flow.Flow
+import com.example.codemaster.utils.Result
+import okhttp3.internal.platform.Platform
+import retrofit2.Response
 
 interface ContestRepository {
 
@@ -21,7 +23,6 @@ interface ContestRepository {
     suspend fun storeCodeforcesUsername(userName : Username)
     suspend fun storeLeetcodeUsername(userName: Username)
 
-    // datastore
-    suspend fun saveUser(user: User)
-    suspend fun getUser() : Flow<User>
+    suspend fun getCodechefUsername(id : Int) : Username?
+
 }

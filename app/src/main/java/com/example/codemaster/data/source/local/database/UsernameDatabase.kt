@@ -12,7 +12,6 @@ import com.example.codemaster.data.source.local.enitity.Username
 )
 abstract class UsernameDatabase : RoomDatabase(){
 
-
     // instance of dao classs for accessing functions of dao
     abstract val usernameDao : UsernameDao
 }
