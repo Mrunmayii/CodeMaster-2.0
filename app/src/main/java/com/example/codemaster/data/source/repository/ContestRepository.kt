@@ -16,13 +16,13 @@ interface ContestRepository {
     suspend fun getCodechef(userName : String) : Result<Codechef?>
     suspend fun getCodeforces(userName : String) : Result<Codeforces?>
     suspend fun getLeetCode(userName: String) : Result<Leetcode?>
-    suspend fun getContestDetails() : Result<List<Contest>?>
+    suspend fun getContestDetails() : Result<Contest?>
 
     // room database
     suspend fun storeCodechefUsername(userName : Username)
     suspend fun storeCodeforcesUsername(userName : Username)
     suspend fun storeLeetcodeUsername(userName: Username)
 
-    suspend fun getCodechefUsername(id : Int) : Username?
+    suspend fun getUsername(id : Int) : Username?
 
 }

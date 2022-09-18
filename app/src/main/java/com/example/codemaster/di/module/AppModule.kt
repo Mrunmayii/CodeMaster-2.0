@@ -54,7 +54,7 @@ object AppModule {
     @Named("ContestDetails")
     fun providesContestDetails(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://kontests.net/api/")
+            .baseUrl("https://kontests.net/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

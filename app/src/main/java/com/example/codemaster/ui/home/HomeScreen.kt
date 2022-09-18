@@ -28,7 +28,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 fun HomeScreen(
     viewModel: InputListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     Box (modifier = Modifier.background(Color.Cyan)) {
         Column {
             Card(

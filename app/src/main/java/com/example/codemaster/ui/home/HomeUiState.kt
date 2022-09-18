@@ -1,7 +1,7 @@
 package com.example.codemaster.ui.home
 
 data class HomeUiState(
-    var ccUser: String = "codechef from ui",
-    var cfUser: String = "codeforces from ui",
-    var lcUser: String = "leetcode from ui"
+    var ccUser: String = "codechef",
+    var cfUser: String = "codeforces",
+    var lcUser: String = "leetcode"
 )

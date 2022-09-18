@@ -57,7 +57,7 @@ class ContestRepositoryImpl @Inject constructor(
                 Result.Error(message = "Error fetching leetcode data")
             }
         }
-    override suspend fun getContestDetails(): Result<List<Contest>?> =
+    override suspend fun getContestDetails(): Result<Contest?> =
         withContext(ioDispatcher) {
             return@withContext try {
                 val resource = contestApi.getContestDetails().body()
@@ -81,8 +81,8 @@ class ContestRepositoryImpl @Inject constructor(
             usernameDao.storeLeetcodeUsername(userName)
         }
 
-    override suspend fun getCodechefUsername(id: Int): Username? {
-        return usernameDao.getCodechefUsername(id)
+    override suspend fun getUsername(id: Int): Username? {
+        return usernameDao.getUsername(id)
     }
 
 }

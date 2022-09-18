@@ -1,52 +1,49 @@
-package com.example.codemaster.ui.codechef_screen
+package com.example.codemaster.ui.contest_screen
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.codemaster.data.model.Codechef
 import com.example.codemaster.data.source.repository.ContestRepository
+import com.example.codemaster.ui.codechef_screen.CodechefUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class CodechefViewModel @Inject constructor(
-    private val repository: ContestRepository,
-): ViewModel(){
 
-    private val _uiState = MutableStateFlow<CodechefUiState>(CodechefUiState.Empty)
-    val uiState: StateFlow<CodechefUiState> = _uiState
+@HiltViewModel
+class ContestViewModel @Inject constructor(
+    val repository: ContestRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<ContestUiState>(ContestUiState.Empty)
+    val uiState: StateFlow<ContestUiState> = _uiState
+
 
     init {
-        fetchCodechef()
+        fetchContestDetails()
     }
-
-    private fun fetchCodechef(){
-        _uiState.value = CodechefUiState.Loading
+    private fun fetchContestDetails(){
+        _uiState.value = ContestUiState.Loading
         viewModelScope.launch {
             try {
-                val username = repository.getUsername(1)?.codechef ?:"codechef"
-                Log.d("kalp", username)
-                val resp = repository.getCodechef(username)
-                Log.d("kalp", username)
+                val resp = repository.getContestDetails()
                 if(resp.data!=null){
-                    _uiState.value = CodechefUiState.Success(
+                    _uiState.value = ContestUiState.Success(
                         data = resp.data
                     )
                     Log.d("kalp", "${resp.data}")
                 }
                 else {
-                    _uiState.value = CodechefUiState.Failure(
+                    _uiState.value = ContestUiState.Failure(
                         message = "Something went wrong"
                     )
+                    Log.d("kalp", "null from response Something went wrong")
                 }
             }
             catch(ex : Exception) {
-                _uiState.value = CodechefUiState.Failure(
+                _uiState.value = ContestUiState.Failure(
                     message = "Something went wrong"
                 )
                 Log.d("kalp", "something went wrong ")

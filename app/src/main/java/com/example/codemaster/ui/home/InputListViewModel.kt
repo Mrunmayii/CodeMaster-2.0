@@ -1,6 +1,8 @@
 package com.example.codemaster.ui.home
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codemaster.data.source.local.enitity.Username
@@ -12,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.platform.Platform
 import javax.inject.Inject
 
 
@@ -29,10 +30,8 @@ class InputListViewModel @Inject constructor(
 
     var cc by mutableStateOf("cc")
         private set
-
     var cf by mutableStateOf("cf")
         private set
-
     var lc by mutableStateOf("lc")
         private set
 
@@ -40,13 +39,13 @@ class InputListViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = _uiState
 
     init {
         viewModelScope.launch {
-            cc = repository.getCodechefUsername(1)?.codechef ?: "codechef"
-            cf = repository.getCodechefUsername(1)?.codeforces ?: "codeforces"
-            lc = repository.getCodechefUsername(1)?.leetcode ?: "leetcode"
+            cc = repository.getUsername(1)?.codechef ?: "codechef"
+            cf = repository.getUsername(1)?.codeforces ?: "codeforces"
+            lc = repository.getUsername(1)?.leetcode ?: "leetcode"
         }
     }
 

@@ -20,6 +20,6 @@ interface UsernameDao {
     suspend fun storeLeetcodeUsername(username : Username)
 
     @Query("SELECT * FROM Username WHERE id = :id")
-    suspend fun getCodechefUsername(id : Int) : Username?
+    suspend fun getUsername(id : Int) : Username?
 
 }
