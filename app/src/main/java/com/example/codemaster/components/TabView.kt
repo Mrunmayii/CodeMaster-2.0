@@ -19,7 +19,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Tab
-import com.example.codemaster.ui.codechef_screen.Setdetail
+import kotlinx.coroutines.Dispatchers
 
 // Tab Holder
 @OptIn(ExperimentalPagerApi::class)
@@ -83,7 +83,7 @@ fun Tabs(pagerState: PagerState) {
                 },
                 selected = pagerState.currentPage == index,
                 onClick = {
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         pagerState.animateScrollToPage(index)
                     }
                 }

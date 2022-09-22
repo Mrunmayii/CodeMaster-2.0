@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +32,12 @@ import com.example.codemaster.components.*
 import com.example.codemaster.ui.codechef_screen.Setdetail
 import com.example.codemaster.ui.home.HomeScreen
 import com.example.codemaster.utils.NavigationGraph
+import coil.compose.AsyncImage
+import com.example.codemaster.components.BottomNav
+import com.example.codemaster.components.TabView
+import com.example.codemaster.components.TopAppBar
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.glide.GlideImage
 import dagger.hilt.android.AndroidEntryPoint
 import me.onebone.toolbar.CollapsingToolbar
 import me.onebone.toolbar.CollapsingToolbarScaffold

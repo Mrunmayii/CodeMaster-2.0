@@ -59,4 +59,13 @@ object AppModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    @Named("UserRatingChange")
+    fun providesUserRatingChange(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://codeforces.com/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 }
