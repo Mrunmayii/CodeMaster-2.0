@@ -5,9 +5,8 @@ import com.example.codemaster.data.model.Codeforces
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
-import com.example.codemaster.utils.Result
 
-interface CfCcAPi {
+interface CFCCApi {
 
     @GET("codechef/{userName}")
     suspend fun getCodechef(

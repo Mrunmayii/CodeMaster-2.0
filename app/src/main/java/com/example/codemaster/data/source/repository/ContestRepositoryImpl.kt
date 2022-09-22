@@ -4,9 +4,13 @@ import com.example.codemaster.data.model.Codechef
 import com.example.codemaster.data.model.Codeforces
 import com.example.codemaster.data.model.Contest
 import com.example.codemaster.data.model.Leetcode
+import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
+import com.example.codemaster.data.model.codeforces_offical.UserInfo
+import com.example.codemaster.data.model.codeforces_offical.UserRatingChange
 import com.example.codemaster.data.source.local.dao.UsernameDao
 import com.example.codemaster.data.source.local.enitity.Username
-import com.example.codemaster.data.source.remote.retrofit.CfCcAPi
+import com.example.codemaster.data.source.remote.retrofit.CFCCApi
+import com.example.codemaster.data.source.remote.retrofit.CodeforcesApi
 import com.example.codemaster.data.source.remote.retrofit.ContestApi
 import com.example.codemaster.data.source.remote.retrofit.LeetcodeApi
 import com.example.codemaster.di.scope.IoDispatcher
@@ -19,8 +23,9 @@ import javax.inject.Inject
 class ContestRepositoryImpl @Inject constructor(
 
     private var leetcodeApi: LeetcodeApi,
-    private var cfccApi: CfCcAPi,
+    private var cfccApi: CFCCApi,
     private var contestApi: ContestApi,
+    private var codeforcesApi: CodeforcesApi,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val usernameDao: UsernameDao
 
@@ -66,6 +71,41 @@ class ContestRepositoryImpl @Inject constructor(
                 Result.Error(message = "Error fetching contest data")
             }
         }
+
+    override suspend fun getUserRatingChange(handle:String): Result<UserRatingChange?> =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                val resource = codeforcesApi.getUserRatingChange(handle).body()
+                if (resource != null) {
+                    Result.Success(resource)
+                } else {
+                    Result.Error("error fetching user rating change")
+                }
+            } catch(exception : Exception){
+                Result.Error(message = "Error fetching contest data")
+            }
+        }
+
+    override suspend fun getProblemset(tags: String): Result<CodeforcesProblemset?> =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                val resource = codeforcesApi.getUserProblemset(tags).body()
+                Result.Success(resource)
+            } catch (exception : Exception) {
+                Result.Error(message = "error fetching problemset")
+            }
+        }
+
+    override suspend fun getUserInfo(handle: String): Result<UserInfo?> =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                val response = codeforcesApi.getUserInfo(handle).body()
+                Result.Success(response)
+            } catch (exception : Exception) {
+                Result.Error(message = "Error fetching user information")
+            }
+        }
+
 
     // local implementation
     override suspend fun storeCodechefUsername(userName: Username) =

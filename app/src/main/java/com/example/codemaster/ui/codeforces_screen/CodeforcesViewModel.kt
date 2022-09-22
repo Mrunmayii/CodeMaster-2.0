@@ -1,12 +1,8 @@
 package com.example.codemaster.ui.codeforces_screen
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codemaster.data.source.repository.ContestRepository
-import com.example.codemaster.ui.codechef_screen.CodechefUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +25,7 @@ class CodeforcesViewModel @Inject constructor(
     private fun fetchCodeforces() {
         viewModelScope.launch {
             try {
-                val username = repository.getCodechefUsername(1)?.codeforces ?: "codeforces"
+                val username = repository.getUsername(1)?.codeforces ?: "codeforces"
                 val resp = repository.getCodeforces(username)
                 if (resp.data != null) {
                     _uiState.value = CodeforcesUiState.Success(

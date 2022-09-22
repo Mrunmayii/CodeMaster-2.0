@@ -1,18 +1,16 @@
 package com.example.codemaster.di.module
 
-import android.content.Context
-import com.example.codemaster.data.source.remote.retrofit.CfCcAPi
+import com.example.codemaster.data.source.remote.retrofit.CFCCApi
+import com.example.codemaster.data.source.remote.retrofit.CodeforcesApi
 import com.example.codemaster.data.source.remote.retrofit.ContestApi
 import com.example.codemaster.data.source.remote.retrofit.LeetcodeApi
-import com.example.codemaster.data.source.repository.ContestRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Named
-import javax.inject.Singleton
 
 
 @Module
@@ -20,8 +18,8 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
-    fun provideCCCF(@Named("CFCC") retrofit: Retrofit) : CfCcAPi {
-        return retrofit.create(CfCcAPi::class.java)
+    fun provideCCCF(@Named("CFCC") retrofit: Retrofit) : CFCCApi {
+        return retrofit.create(CFCCApi::class.java)
     }
     @Provides
     fun provideLeetcode(@Named("Leetcode") retrofit: Retrofit) : LeetcodeApi {
@@ -31,6 +29,11 @@ class NetworkModule {
     @Provides
     fun provideContestDetails(@Named("ContestDetails") retrofit: Retrofit) : ContestApi {
         return retrofit.create(ContestApi::class.java)
+    }
+
+    @Provides
+    fun provideUserRatingChange(@Named("UserRatingChange") retrofit : Retrofit) : CodeforcesApi {
+        return retrofit.create(CodeforcesApi::class.java)
     }
 
 
