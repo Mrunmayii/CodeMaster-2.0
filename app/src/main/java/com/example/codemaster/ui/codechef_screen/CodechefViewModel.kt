@@ -37,7 +37,7 @@ class CodechefViewModel @Inject constructor(
                     _uiState.value = CodechefUiState.Success(
                         data = resp.data
                     )
-                    Log.d("kalp", "${resp.data}")
+                    Log.d("mrun", "${resp.data}")
                 }
                 else {
                     _uiState.value = CodechefUiState.Failure(

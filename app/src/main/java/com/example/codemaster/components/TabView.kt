@@ -19,6 +19,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Tab
+import com.example.codemaster.ui.codechef_screen.Setdetail
 
 // Tab Holder
 @OptIn(ExperimentalPagerApi::class)

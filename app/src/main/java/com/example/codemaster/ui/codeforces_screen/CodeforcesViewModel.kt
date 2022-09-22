@@ -29,7 +29,7 @@ class CodeforcesViewModel @Inject constructor(
     private fun fetchCodeforces() {
         viewModelScope.launch {
             try {
-                val username = repository.getCodechefUsername(1)?.codeforces ?: "codeforces"
+                val username = repository.getUsername(1)?.codeforces ?: "codeforces"
                 val resp = repository.getCodeforces(username)
                 if (resp.data != null) {
                     _uiState.value = CodeforcesUiState.Success(

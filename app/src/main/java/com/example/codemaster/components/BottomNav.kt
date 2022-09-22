@@ -3,35 +3,54 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.codemaster.R
+import com.example.codemaster.utils.Nav
+import me.onebone.toolbar.ScrollStrategy
 
 @Composable
-fun BottomNav(){
+fun BottomNav(navController: NavController){
     val items = listOf(
-        R.drawable.icons_contest,
-        R.drawable.icons_codechef,
-        R.drawable.icons_codeforces,
-        R.drawable.icons_leetcode
+        Nav.CONTESTS,
+        Nav.CODECHEF,
+        Nav.CODEFORCES,
+        Nav.LEETCODE
     )
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation(
         backgroundColor = Color.White,
         elevation = 120.dp,
         modifier = Modifier.height(62.dp),
-        contentColor = Color.Gray
+        contentColor = Color.Gray,
     ){
-        items.forEachIndexed { index, item ->
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { item ->
             BottomNavigationItem(
-                selected = selectedItem == index,
-                icon = { Icon(painterResource(id = item), contentDescription = null) },
-                onClick = { selectedItem = index },
-                selectedContentColor = Color.Black,
-                unselectedContentColor = Color.LightGray
+//                selected = selectedItem == index,
+                icon = { Icon(painterResource(id = item.icon), contentDescription = null) },
+//                onClick = { selectedItem = index },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.LightGray,
+                selected = currentRoute == item.route,
+                onClick = {
+                    navController.navigate(item.route){
+                        navController.graph.startDestinationRoute?.let { screen_route ->
+                            popUpTo(screen_route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     }
