@@ -1,5 +1,6 @@
 package com.example.codemaster.ui.codeforces_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codemaster.data.source.repository.ContestRepository
@@ -26,11 +27,12 @@ class CodeforcesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val username = repository.getUsername(1)?.codeforces ?: "codeforces"
-                val resp = repository.getCodeforces(username)
+                val resp = repository.getUserInfo(username)
                 if (resp.data != null) {
                     _uiState.value = CodeforcesUiState.Success(
                         data = resp.data
                     )
+                    Log.d("cfDATA", "${resp.data}")
                 } else {
                     _uiState.value = CodeforcesUiState.Failure(
                         message = "Something went wrong"

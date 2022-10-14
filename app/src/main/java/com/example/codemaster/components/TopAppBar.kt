@@ -18,7 +18,7 @@ import com.example.codemaster.R
 
 val font = FontFamily(Font(R.font.acme_regular))
 @Composable
-fun TopAppBar(){
+fun TopAppBar() {
     TopAppBar(
         backgroundColor = Color.White,
         contentPadding = PaddingValues(20.dp),

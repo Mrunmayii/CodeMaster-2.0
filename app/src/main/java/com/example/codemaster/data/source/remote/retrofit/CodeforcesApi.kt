@@ -22,6 +22,6 @@ interface CodeforcesApi {
 
     @GET("user.info?")
     suspend fun getUserInfo(
-        @Query("handle") handle : String
+        @Query("handles") handle : String
     ) : Response<UserInfo>
 }
