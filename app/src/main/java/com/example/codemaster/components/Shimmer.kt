@@ -48,13 +48,13 @@ fun ShimmerGridItem(
         horizontalAlignment = Alignment.Start
     ){
         Spacer(modifier = Modifier
-            .height(30.dp)
+            .height(55.dp)
             .fillMaxWidth(0.7f)
             .background(brush)
         )
         Spacer(modifier = Modifier.height(10.dp))
         Spacer(modifier = Modifier
-            .height(30.dp)
+            .height(55.dp)
             .fillMaxWidth(0.9f)
             .background(brush)
         )

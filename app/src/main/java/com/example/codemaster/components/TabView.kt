@@ -83,7 +83,7 @@ fun Tabs(pagerState: PagerState) {
                 },
                 selected = pagerState.currentPage == index,
                 onClick = {
-                    scope.launch(Dispatchers.IO) {
+                    scope.launch{
                         pagerState.animateScrollToPage(index)
                     }
                 }

@@ -58,7 +58,13 @@ fun CodechefScreen(data:Codechef){
                         Row() {
                             Column(modifier = Modifier.padding(10.dp)) {
                                 val painter = rememberImagePainter(data = data.avatar)
-                                Image(painter = painter, contentDescription = "Profile_picture")
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "Profile_picture",
+                                    modifier = Modifier
+                                        .height(75.dp)
+                                        .width(60.dp)
+                                )
                             }
                             Column(modifier = Modifier.padding(10.dp)) {
                                 Box() {
