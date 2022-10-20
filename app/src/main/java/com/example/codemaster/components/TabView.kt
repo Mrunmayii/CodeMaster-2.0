@@ -34,13 +34,15 @@ import kotlinx.coroutines.Dispatchers
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabView(){
+fun TabView(
+    setAlarm : ()-> Unit,
+){
     val pagerState = rememberPagerState(0)
     Column(
         modifier = Modifier.background(Color.White)
     ) {
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState)
+        TabsContent(pagerState = pagerState,setAlarm = setAlarm,)
     }
 }
 
@@ -106,19 +108,15 @@ fun Tabs(pagerState: PagerState) {
 @RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalPagerApi
 @Composable
-fun TabsContent(pagerState: PagerState) {
+fun TabsContent(
+    pagerState: PagerState,
+    setAlarm: () -> Unit,
+) {
     HorizontalPager(state = pagerState, count = 3) { page ->
         when (page) {
-            0 -> OngoingContest()
-            1 -> Contest()
-            2 -> FutureContest()
+            0 -> OngoingContest(setAlarm)
+            1 -> Contest(setAlarm)
+            2 -> FutureContest(setAlarm)
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-@Preview(showBackground = true)
-fun Main(){
-    TabView()
 }

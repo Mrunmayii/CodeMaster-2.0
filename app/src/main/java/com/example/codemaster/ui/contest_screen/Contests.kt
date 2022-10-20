@@ -3,12 +3,15 @@ package com.example.codemaster.ui.contest_screen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
@@ -38,6 +41,7 @@ import java.util.TimeZone
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contest(
+    setAlarm: () -> Unit,
     contestViewModel: ContestViewModel = hiltViewModel()
 ) {
     val state = contestViewModel.uiState.collectAsState().value
@@ -54,23 +58,28 @@ fun Contest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Contests(data = state.data)
+            is ContestUiState.Success -> Contests(
+                data = state.data,
+                setAlarm = setAlarm
+            )
         }
     }
 }
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contests(
-    data : Contest
+    data : Contest,
+    setAlarm : ()-> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 52.dp)
     ) {
-        items(data.filter { it.in_24_hours == "Yes" }
-        ){
-            ContestCard(data = it)
+        items(data.filter { it.in_24_hours == "Yes" }) {
+            ContestCard(data = it, setAlarm = setAlarm)
         }
     }
 }
@@ -79,7 +88,8 @@ fun Contests(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContestCard(
-    data : ContestItem
+    data : ContestItem,
+    setAlarm : ()-> Unit,
 ){
     Column(
         modifier = Modifier
@@ -151,19 +161,21 @@ fun ContestCard(
                     )
                 }
             }
-//            Column(
-//                modifier = Modifier,
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-//            ){
-//                Image(
-//                    painter = painterResource(id = R.drawable.icons_alarm),
-//                    contentDescription = "Reminder",
-//                    modifier = Modifier
-//                        .wrapContentSize()
-//                        .align(Alignment.End),
-//                )
-//            }
+            Column(
+                modifier = Modifier,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.icons_alarm),
+                    contentDescription = "Reminder",
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.End).clickable {
+                                setAlarm()
+                        },
+                )
+            }
         }
     }
 }

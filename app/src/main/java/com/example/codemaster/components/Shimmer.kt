@@ -29,7 +29,6 @@ fun Shimmer(){
             )
         )
     )
-
     val brush = Brush.linearGradient(
         colors = colors,
         start = Offset.Zero,
