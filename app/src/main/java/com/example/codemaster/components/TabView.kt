@@ -1,4 +1,6 @@
 package com.example.codemaster.components
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -22,15 +24,18 @@ import androidx.compose.material3.Tab
 import kotlinx.coroutines.Dispatchers
 
 // Tab Holder
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabView(){
+fun TabView(
+    setAlarm : ()-> Unit,
+){
     val pagerState = rememberPagerState(0)
     Column(
         modifier = Modifier.background(Color.White)
     ) {
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState)
+        TabsContent(pagerState = pagerState,setAlarm = setAlarm,)
     }
 }
 
@@ -92,20 +97,18 @@ fun Tabs(pagerState: PagerState) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalPagerApi
 @Composable
-fun TabsContent(pagerState: PagerState) {
+fun TabsContent(
+    pagerState: PagerState,
+    setAlarm: () -> Unit,
+) {
     HorizontalPager(state = pagerState, count = 3) { page ->
         when (page) {
-            0 -> Contest()
-            1 -> Contest()
-            2 -> Contest()
+            0 -> Contest(setAlarm)
+            1 -> Contest(setAlarm)
+            2 -> Contest(setAlarm)
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun Main(){
-    TabView()
 }

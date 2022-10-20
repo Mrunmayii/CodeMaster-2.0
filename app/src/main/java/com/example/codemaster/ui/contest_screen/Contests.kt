@@ -3,6 +3,7 @@ package com.example.codemaster.ui.contest_screen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,7 @@ import java.util.TimeZone
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contest(
+    setAlarm: () -> Unit,
     contestViewModel: ContestViewModel = hiltViewModel()
 ) {
     val state = contestViewModel.uiState.collectAsState().value
@@ -56,7 +58,10 @@ fun Contest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Contests(data = state.data)
+            is ContestUiState.Success -> Contests(
+                data = state.data,
+                setAlarm = setAlarm
+            )
         }
     }
 }
@@ -65,13 +70,14 @@ fun Contest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contests(
-    data : Contest
+    data : Contest,
+    setAlarm : ()-> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(data){
-            ContestCard(data = it)
+            ContestCard(data = it, setAlarm = setAlarm)
         }
     }
 }
@@ -80,7 +86,8 @@ fun Contests(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContestCard(
-    data : ContestItem
+    data : ContestItem,
+    setAlarm : ()-> Unit,
 ){
     Column(
         modifier = Modifier
@@ -151,7 +158,9 @@ fun ContestCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.End),
+                        .align(Alignment.End).clickable {
+                                setAlarm()
+                        },
                 )
             }
         }

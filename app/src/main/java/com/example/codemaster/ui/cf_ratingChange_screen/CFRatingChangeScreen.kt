@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.components.ErrorDialog
+
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.codeforces_offical.RatingChangeResult
 import com.example.codemaster.data.model.codeforces_offical.UserRatingChange

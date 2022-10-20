@@ -17,7 +17,7 @@ interface CodeforcesApi {
 
     @GET("problemset.problems?")
     suspend fun getUserProblemset(
-        @Query("tags") tags : String
+        @Query("tags", encoded = true) tags : String
     ) : Response<CodeforcesProblemset>
 
     @GET("user.info?")

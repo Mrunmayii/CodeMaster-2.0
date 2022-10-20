@@ -13,13 +13,17 @@ import com.example.codemaster.ui.leetcode_screen.MainLCScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavigationGraph(navController: NavHostController){
+fun NavigationGraph(
+    navController: NavHostController,
+    setAlarm : ()-> Unit
+){
     NavHost(
         navController,
+
         startDestination = Nav.CONTESTS.route
     ){
         composable(Nav.CONTESTS.route){
-            TabView()
+            TabView(setAlarm)
         }
         composable(Nav.CODECHEF.route){
             Setdetail()

@@ -29,12 +29,14 @@ class CFRatingChangeViewModel @Inject constructor(
                 val username = repository.getUsername(1)?.codeforces ?: "codeforces"
                 val resp = repository.getUserRatingChange(username)
                 if(resp.data != null){
+                    Log.d("kalp", "${resp.data}")
                     _uiState.value = CFRatingChangeUiState.Success(
                         data = resp.data
                     )
-                    Log.d("cfRatings", "${resp.data}")
+                    Log.d("kalp", "${resp.data}")
                 }
                 else{
+                    Log.d("kalp", "${resp.data}")
                     _uiState.value = CFRatingChangeUiState.Failure(
                         message = "Soemthing Went Wrong"
                     )
