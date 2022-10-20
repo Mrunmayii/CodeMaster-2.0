@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.R
@@ -28,18 +28,15 @@ import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.Contest
 import com.example.codemaster.data.model.ContestItem
-import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Contest(
+fun FutureContest(
     contestViewModel: ContestViewModel = hiltViewModel()
-) {
+){
     val state = contestViewModel.uiState.collectAsState().value
     Column {
         when (state) {
@@ -54,40 +51,38 @@ fun Contest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Contests(data = state.data)
+            is ContestUiState.Success -> Future(data = state.data)
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Contests(
+fun Future(
     data : Contest
-) {
+){
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 52.dp)
     ) {
-        items(data.filter { it.in_24_hours == "Yes" }
+        items(data.filter { it.status == "BEFORE" }
         ){
-            ContestCard(data = it)
+            FutureCard(data = it)
         }
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ContestCard(
-    data : ContestItem
-){
+fun FutureCard(data: ContestItem) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ){
         Divider(
             modifier = Modifier.fillMaxSize(1f),
-            color = Color(0xFFF2F2F5),
+            color = Color(0xFFE6E6F0),
             thickness = 2.dp
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -120,20 +115,20 @@ fun ContestCard(
                 }
                 Text(
                     text = data.name,
-                    fontWeight = Bold
+                    fontWeight = FontWeight.Bold
                 )
 
                 //date
                 if(data.site == "CodeChef") {
                     Text(
-                        text =  data.start_time.toDate().formatTo("dd MMM, yyyy")
+                        text =  "Start Date: ${data.start_time.toDate().formatTo("dd MMM, yyyy")}"
                     )
                 }
                 else {
                     val odt = OffsetDateTime.parse(data.start_time)
                     val dtf = DateTimeFormatter.ofPattern("dd MMM, uuuu", Locale.ENGLISH)
                     Text(
-                        text = dtf.format(odt)
+                        text = "Start Date: ${ dtf.format(odt) }"
                     )
                 }
 
@@ -151,30 +146,6 @@ fun ContestCard(
                     )
                 }
             }
-//            Column(
-//                modifier = Modifier,
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-//            ){
-//                Image(
-//                    painter = painterResource(id = R.drawable.icons_alarm),
-//                    contentDescription = "Reminder",
-//                    modifier = Modifier
-//                        .wrapContentSize()
-//                        .align(Alignment.End),
-//                )
-//            }
         }
     }
-}
-
-fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date {
-    val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
-    parser.timeZone = timeZone
-    return parser.parse(this)
-}
-fun Date.formatTo(dateFormat: String, timeZone: TimeZone = TimeZone.getDefault()): String {
-    val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
-    formatter.timeZone = timeZone
-    return formatter.format(this)
 }

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.example.codemaster.components.ErrorDialog
-import com.example.codemaster.data.model.Codeforces
 import com.example.codemaster.data.model.codeforces_offical.UserInfo
 
 //import com.jaikeerthick.composable_graphs.composables.LineGraph
@@ -54,7 +53,7 @@ fun CodeforcesScreen (
                     Column(modifier = Modifier.padding(10.dp) ) {
                         Row() {
                             Column(modifier = Modifier.padding(10.dp)) {
-                                val painter = rememberImagePainter(data = "${data.result[0].avatar}")
+                                val painter = rememberImagePainter(data = data.result[0].avatar)
                                 Image(
                                     painter = painter,
                                     contentDescription = "Profile_picture",

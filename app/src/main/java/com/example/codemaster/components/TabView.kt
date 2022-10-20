@@ -1,6 +1,10 @@
 package com.example.codemaster.components
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ScrollableTabRow
@@ -19,9 +23,15 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Tab
+import androidx.compose.ui.draw.clip
+import com.example.codemaster.ui.contest_screen.FutureContest
+import com.example.codemaster.ui.contest_screen.Ongoing
+import com.example.codemaster.ui.contest_screen.OngoingCard
+import com.example.codemaster.ui.contest_screen.OngoingContest
 import kotlinx.coroutines.Dispatchers
 
 // Tab Holder
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabView(){
@@ -40,8 +50,8 @@ fun TabView(){
 fun Tabs(pagerState: PagerState) {
     val list = listOf(
         "Ongoing",
-        "Today",
-        "Upcoming"
+        "In 24 hrs",
+        "Future"
     )
     val scope = rememberCoroutineScope()
 
@@ -52,7 +62,7 @@ fun Tabs(pagerState: PagerState) {
             .background(Color.Unspecified),
         selectedTabIndex = pagerState.currentPage,
         containerColor = Color.White,
-        edgePadding = 24.dp,
+//        edgePadding = 24.dp,
         contentColor = Color.Black,
         indicator = {
             Box(
@@ -72,12 +82,13 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(50))
                     .background(Color.White)
                     .padding(vertical = 2.dp),
                 text = {
                     Text(
                         text = list[index],
-                        color = if (pagerState.currentPage == index) Color.Black else Color.LightGray,
+                        color = if (pagerState.currentPage == index) MaterialTheme.colors.primary else Color.LightGray,
                         fontSize = 14.sp
                     )
                 },
@@ -92,18 +103,20 @@ fun Tabs(pagerState: PagerState) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(pagerState: PagerState) {
     HorizontalPager(state = pagerState, count = 3) { page ->
         when (page) {
-            0 -> Contest()
+            0 -> OngoingContest()
             1 -> Contest()
-            2 -> Contest()
+            2 -> FutureContest()
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showBackground = true)
 fun Main(){

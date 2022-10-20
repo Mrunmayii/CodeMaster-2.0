@@ -36,7 +36,7 @@ class CFRatingChangeViewModel @Inject constructor(
                 }
                 else{
                     _uiState.value = CFRatingChangeUiState.Failure(
-                        message = "Soemthing Went Wrong"
+                        message = "Something Went Wrong"
                     )
                 }
             }

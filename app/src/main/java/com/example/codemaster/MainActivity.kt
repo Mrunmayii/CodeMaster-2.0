@@ -40,14 +40,14 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            val navController = rememberNavController()
 //            Scaffold(
-//                topBar = { TopAppBar() },
-//                bottomBar = { BottomNav(navController = navController) }
+////                topBar = { TopAppBar() },
+////                bottomBar = { BottomNav(navController = navController) }
 //                ) {
-//                NavigationGraph(navController = navController)
+////                NavigationGraph(navController = navController)
 //            }
-//            Main()
+               Main()
 //            HomeScreen()
-            CFRatingChangeScreen()
+//            CFRatingChangeScreen()
 //            CFProblemScreen()
         }
     }
@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Preview(showBackground = true)
 @Composable
 fun Main(){
     val navController = rememberNavController()
@@ -76,9 +75,10 @@ fun Main(){
         }
     ){
         Scaffold(
-        bottomBar = { BottomNav(navController = navController) }
-    ){
-        NavigationGraph(navController = navController)
-    }
+//            topBar = { TopAppBar() },
+            bottomBar = { BottomNav(navController = navController) }
+        ){
+            NavigationGraph(navController = navController)
+        }
     }
 }

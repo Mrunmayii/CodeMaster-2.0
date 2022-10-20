@@ -119,5 +119,9 @@ dependencies {
     //graphs
 //    implementation("com.himanshoe:charty:1.1.3-alpha04")
 //    implementation 'com.github.tehras:charts:Tag'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    testImplementation "android.arch.core:core-testing:1.1.1"
 
 }
