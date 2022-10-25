@@ -14,7 +14,6 @@ import androidx.compose.material.Scaffold
 import androidx.navigation.compose.rememberNavController
 import com.example.codemaster.components.BottomNav
 import com.example.codemaster.components.TopAppBar
-import com.example.codemaster.ui.contest_screen.ReminderReciever
 import com.example.codemaster.utils.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +32,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 NavigationGraph(
                     navController = navController,
-                    setAlarm = { setAlarm() }
+                    intent = intent
                 )
             }
 ////            HomeScreen()
@@ -42,21 +41,6 @@ class MainActivity : ComponentActivity() {
 //
 //        }
         }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun setAlarm() {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val triggerTime = System.currentTimeMillis() + 2000
-        val iBroadCast = Intent(this, ReminderReciever::class.java)
-        val pi: PendingIntent = PendingIntent.getBroadcast(
-            this,
-            100,
-            iBroadCast,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi)
     }
 }
 

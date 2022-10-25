@@ -1,5 +1,6 @@
 package com.example.codemaster.utils
 
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -15,15 +16,14 @@ import com.example.codemaster.ui.leetcode_screen.MainLCScreen
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    setAlarm : ()-> Unit
+    intent : Intent
 ){
     NavHost(
         navController,
-
         startDestination = Nav.CONTESTS.route
     ){
         composable(Nav.CONTESTS.route){
-            TabView(setAlarm)
+            TabView(intent)
         }
         composable(Nav.CODECHEF.route){
             Setdetail()

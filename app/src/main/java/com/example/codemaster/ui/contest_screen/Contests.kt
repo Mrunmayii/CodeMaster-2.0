@@ -1,6 +1,8 @@
 package com.example.codemaster.ui.contest_screen
 
+import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,7 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.MyApplication
 import com.example.codemaster.R
+import com.example.codemaster.broadcasts.SetAlarmBroadcast
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.Contest
@@ -38,10 +42,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+val alarmService = SetAlarmBroadcast()
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contest(
-    setAlarm: () -> Unit,
+    intent : Intent,
     contestViewModel: ContestViewModel = hiltViewModel()
 ) {
     val state = contestViewModel.uiState.collectAsState().value
@@ -60,7 +65,7 @@ fun Contest(
             is ContestUiState.Failure -> ErrorDialog(state.message)
             is ContestUiState.Success -> Contests(
                 data = state.data,
-                setAlarm = setAlarm
+                intent = intent
             )
         }
     }
@@ -70,14 +75,17 @@ fun Contest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contests(
-    data : Contest,
-    setAlarm : ()-> Unit
+    data: Contest,
+    intent: Intent
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(data){
-            ContestCard(data = it, setAlarm = setAlarm)
+            ContestCard(
+                data = it,
+                intent = intent
+            )
         }
     }
 }
@@ -86,8 +94,8 @@ fun Contests(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContestCard(
-    data : ContestItem,
-    setAlarm : ()-> Unit,
+    data: ContestItem,
+    intent : Intent
 ){
     Column(
         modifier = Modifier
@@ -100,19 +108,27 @@ fun ContestCard(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Row(){
-            Column(modifier = Modifier.padding(15.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .clickable {
+//                        val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+//                        myIntent.putExtra("key", data.url) //Optional parameters
+//                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                        MyApplication.instance.startActivity(myIntent)
+                    }
+            ) {
                 Row() {
-                    val painter: Painter
-                    if(data.site == "CodeChef")
-                        painter = painterResource(id = R.drawable.icons_codechef)
+                    val painter: Painter = if(data.site == "CodeChef")
+                        painterResource(id = R.drawable.icons_codechef)
                     else if(data.site == "CodeForces")
-                        painter = painterResource(id = R.drawable.icons_codeforces)
+                        painterResource(id = R.drawable.icons_codeforces)
                     else if(data.site == "LeetCode")
-                        painter = painterResource(id = R.drawable.icons_leetcode)
+                        painterResource(id = R.drawable.icons_leetcode)
                     else if(data.site == "HackerRank")
-                        painter = painterResource(id = R.drawable.icons_hackerrank)
+                        painterResource(id = R.drawable.icons_hackerrank)
                     else
-                        painter = painterResource(id = R.drawable.icons_contest)
+                        painterResource(id = R.drawable.icons_contest)
                     Image(
                         painter = painter,
                         contentDescription = "logo",
@@ -126,12 +142,13 @@ fun ContestCard(
                     text = data.name,
                     fontWeight = Bold
                 )
-
                 //date
                 if(data.site == "CodeChef") {
-                    Text(
-                        text =  data.start_time.toDate().formatTo("dd MMM, yyyy")
-                    )
+                    data.start_time.toDate()?.let {
+                        Text(
+                            text =  it.formatTo("dd MMM, yyyy")
+                        )
+                    }
                 }
                 else {
                     val odt = OffsetDateTime.parse(data.start_time)
@@ -140,7 +157,6 @@ fun ContestCard(
                         text = dtf.format(odt)
                     )
                 }
-
                 //no. of hours
                 val x = (data.duration).toIntOrNull()
                 val length = x?.div(3600)
@@ -158,16 +174,26 @@ fun ContestCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.End).clickable {
-                                setAlarm()
-                        },
+                        .align(Alignment.End)
+                        .clickable {
+                            intent.putExtra("platform", data.site)
+                            intent.putExtra("contest", data.name)
+                            Log.d("kalp", data.name)
+                            Log.d("kalp", data.site)
+                            alarmService.setAlarm(
+                                MyApplication.instance,
+                                data.site,
+                                data.name,
+                                data.start_time
+                            )
+                        }
                 )
             }
         }
     }
 }
 
-fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date {
+fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date? {
     val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
     parser.timeZone = timeZone
     return parser.parse(this)
@@ -177,3 +203,5 @@ fun Date.formatTo(dateFormat: String, timeZone: TimeZone = TimeZone.getDefault()
     formatter.timeZone = timeZone
     return formatter.format(this)
 }
+
+
