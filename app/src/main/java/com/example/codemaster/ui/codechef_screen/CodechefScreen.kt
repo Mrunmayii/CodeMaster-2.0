@@ -45,7 +45,8 @@ fun CodechefScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    elevation = 5.dp
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(10.dp),
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
                         Row() {
@@ -98,7 +99,8 @@ fun CodechefScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    elevation = 5.dp
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     CCGraph(data = data)
                 }

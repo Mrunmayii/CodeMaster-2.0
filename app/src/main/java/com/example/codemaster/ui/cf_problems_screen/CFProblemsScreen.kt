@@ -2,12 +2,11 @@ package com.example.codemaster.ui.cf_problems_screen
 
 import android.os.Build
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,12 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
-import com.example.codemaster.components.WebViewPager
-import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.Problem
-import com.example.codemaster.data.model.codeforces_offical.ProblemsetResult
-import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
-import com.example.codemaster.ui.codeforces_screen.CodeforcesViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -127,7 +121,7 @@ fun Problems(
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = "Problem Set",
@@ -180,7 +174,17 @@ fun Problems(
 
 @Composable
 fun Nul(){
-    Text(text = "No result found")
+    Box(
+        modifier = Modifier
+            .fillMaxSize(0.5f),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = "No result found!",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+        )
+    }
 }
 @Composable
 fun ProblemCard(
@@ -195,7 +199,6 @@ fun ProblemCard(
 //            url = "https://codeforces.com/problemset/problem/${contestId}/${index}"
 //        )
 //    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -209,29 +212,48 @@ fun ProblemCard(
             modifier = Modifier
                 .padding(10.dp)
         ){
-            Row {
-                Text(
-                    text = "${contestId}${index}",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 10.dp)
-
-                )
-                Text(
-                    text = contestName,
+            Row (
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ){
+                Column(
                     modifier = Modifier
-                        .padding(end = 10.dp),
+                        .width(50.dp)
+                ) {
+                    Text(
+                        text = "${contestId}${index}",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .width(200.dp)
+                ) {
+                    Text(
+                        text = contestName,
+                        modifier = Modifier,
 //                        .clickable(
 //                            onClick = {
 //                                showWebView.value = true
 //                            }
 //                        ),
-                    textDecoration = TextDecoration.Underline,
-                    color = Color.Blue
-                )
-                Text(
-                    text= contestRating,
-                    textAlign = TextAlign.End,
-                )
+                        textDecoration = TextDecoration.Underline,
+                        color = Color.Blue
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .width(50.dp),
+                    horizontalAlignment = Alignment.End
+                ){
+                    Text(
+                        text= contestRating,
+                        textAlign = TextAlign.End,
+                    )
+                }
             }
         }
     }
