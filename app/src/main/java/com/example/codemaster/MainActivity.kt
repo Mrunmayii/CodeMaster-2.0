@@ -50,28 +50,15 @@ class MainActivity : ComponentActivity() {
             ) {
                 NavigationGraph(
                     navController = navController,
-                    setAlarm = { setAlarm() }
+                    intent = intent
                 )
             }
-//            HomeScreen()
+////            HomeScreen()
 ////            CFRatingChangeScreen()
 ////            CFProblemScreen()
 //        }
         }
     }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun setAlarm() {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val triggerTime = System.currentTimeMillis() + 2000
-        val iBroadCast = Intent(this, ReminderReciever::class.java)
-        val pi: PendingIntent = PendingIntent.getBroadcast(
-            this,
-            100,
-            iBroadCast,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi)
-    }
 }
+
+

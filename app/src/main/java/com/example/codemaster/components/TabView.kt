@@ -1,4 +1,5 @@
 package com.example.codemaster.components
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -36,7 +37,7 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun TabView(
     topBar : @Composable ()->Unit,
-    setAlarm : ()-> Unit,
+    intent : Intent
 ){
     val pagerState = rememberPagerState(0)
     Column(
@@ -44,7 +45,10 @@ fun TabView(
     ) {
         topBar()
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState,setAlarm = setAlarm,)
+        TabsContent(
+            pagerState = pagerState,
+            intent = intent
+        )
     }
 }
 
@@ -112,13 +116,13 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TabsContent(
     pagerState: PagerState,
-    setAlarm: () -> Unit,
+    intent : Intent
 ) {
     HorizontalPager(state = pagerState, count = 3) { page ->
         when (page) {
-            0 -> OngoingContest(setAlarm)
-            1 -> Contest(setAlarm)
-            2 -> FutureContest(setAlarm)
+            0 -> OngoingContest(intent)
+            1 -> Contest(intent)
+            2 -> FutureContest(intent)
         }
     }
 }

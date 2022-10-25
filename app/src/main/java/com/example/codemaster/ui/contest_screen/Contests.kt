@@ -1,6 +1,8 @@
 package com.example.codemaster.ui.contest_screen
 
+import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,7 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.MyApplication
 import com.example.codemaster.R
+import com.example.codemaster.broadcasts.SetAlarmBroadcast
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.Contest
@@ -39,10 +43,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+val alarmService = SetAlarmBroadcast()
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contest(
-    setAlarm: () -> Unit,
+    intent : Intent,
     contestViewModel: ContestViewModel = hiltViewModel()
 ) {
     val state = contestViewModel.uiState.collectAsState().value
@@ -61,7 +66,7 @@ fun Contest(
             is ContestUiState.Failure -> ErrorDialog(state.message)
             is ContestUiState.Success -> Contests(
                 data = state.data,
-                setAlarm = setAlarm
+                intent = intent
             )
         }
     }
@@ -71,16 +76,21 @@ fun Contest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Contests(
-    data : Contest,
-    setAlarm : ()-> Unit
+    data: Contest,
+    intent: Intent
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 52.dp)
     ) {
-        items(data.filter { it.in_24_hours == "Yes" }) {
-            ContestCard(data = it, setAlarm = setAlarm)
+        items(
+            data.filter { it.in_24_hours == "Yes" }
+        ) {
+            ContestCard(
+                data = it,
+                intent = intent
+            )
         }
     }
 }
@@ -89,8 +99,8 @@ fun Contests(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContestCard(
-    data : ContestItem,
-    setAlarm : ()-> Unit,
+    data: ContestItem,
+    intent : Intent
 ){
     Column(
         modifier = Modifier
@@ -148,12 +158,13 @@ fun ContestCard(
                     text = data.name,
                     fontWeight = Bold
                 )
-
                 //date
                 if(data.site == "CodeChef") {
-                    Text(
-                        text =  data.start_time.toDate().formatTo("dd MMM, yyyy")
-                    )
+                    data.start_time.toDate()?.let {
+                        Text(
+                            text =  it.formatTo("dd MMM, yyyy")
+                        )
+                    }
                 }
                 else {
                     val odt = OffsetDateTime.parse(data.start_time)
@@ -162,7 +173,6 @@ fun ContestCard(
                         text = dtf.format(odt)
                     )
                 }
-
                 //no. of hours
                 val x = (data.duration).toIntOrNull()
                 val length = x?.div(3600)
@@ -187,17 +197,26 @@ fun ContestCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.End)
                         .clickable {
-                            setAlarm()
-                        },
+                            intent.putExtra("platform", data.site)
+                            intent.putExtra("contest", data.name)
+                            Log.d("kalp", data.name)
+                            Log.d("kalp", data.site)
+                            alarmService.setAlarm(
+                                MyApplication.instance,
+                                data.site,
+                                data.name,
+                                data.start_time
+                            )
+                        }
                 )
             }
         }
     }
 }
 
-fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date {
+fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date? {
     val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
     parser.timeZone = timeZone
     return parser.parse(this)
