@@ -3,12 +3,16 @@ package com.example.codemaster.ui.contest_screen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
@@ -35,6 +39,7 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FutureContest(
+    setAlarm : ()-> Unit,
     contestViewModel: ContestViewModel = hiltViewModel()
 ){
     val state = contestViewModel.uiState.collectAsState().value
@@ -51,7 +56,7 @@ fun FutureContest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Future(data = state.data)
+            is ContestUiState.Success -> Future(data = state.data, setAlarm = setAlarm)
         }
     }
 }
@@ -59,6 +64,7 @@ fun FutureContest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Future(
+    setAlarm : ()-> Unit,
     data : Contest
 ){
     LazyColumn(
@@ -68,14 +74,18 @@ fun Future(
     ) {
         items(data.filter { it.status == "BEFORE" }
         ){
-            FutureCard(data = it)
+            FutureCard(data = it, setAlarm = setAlarm)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FutureCard(data: ContestItem) {
+fun FutureCard(
+    setAlarm : ()-> Unit,
+    data: ContestItem
+) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,9 +95,17 @@ fun FutureCard(data: ContestItem) {
             color = Color(0xFFE6E6F0),
             thickness = 2.dp
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(){
-            Column(modifier = Modifier.padding(15.dp)) {
+        Spacer(modifier = Modifier.height(0.dp))
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Column(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .width(250.dp)
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val painter: Painter
                     if(data.site == "CodeChef")
@@ -145,6 +163,21 @@ fun FutureCard(data: ContestItem) {
                         text = "Duration: ${length.toString()} hrs"
                     )
                 }
+            }
+            Column(
+                modifier = Modifier.width(100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.icons_alarm),
+                    contentDescription = "Reminder",
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterHorizontally).clickable {
+                            setAlarm()
+                        },
+                )
             }
         }
     }

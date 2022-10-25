@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -101,14 +102,27 @@ fun ContestCard(
             thickness = 2.dp
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Row(){
-            Column(modifier = Modifier.padding(15.dp)) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Column(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .width(250.dp)
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val painter: Painter
-                    if(data.site == "CodeChef")
+                    var colour: Color = Color.Black
+                    if(data.site == "CodeChef") {
                         painter = painterResource(id = R.drawable.icons_codechef)
-                    else if(data.site == "CodeForces")
+                        colour = Color.Red
+                    }
+                    else if(data.site == "CodeForces") {
                         painter = painterResource(id = R.drawable.icons_codeforces)
+                        colour = Color(0xFF66C1EE)
+                    }
                     else if(data.site == "LeetCode")
                         painter = painterResource(id = R.drawable.icons_leetcode)
                     else if(data.site == "HackerRank")
@@ -125,7 +139,9 @@ fun ContestCard(
                     )
                     Text(
                         text = data.site,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        color = colour,
+                        fontWeight = Bold
                     )
                 }
                 Text(
@@ -162,7 +178,7 @@ fun ContestCard(
                 }
             }
             Column(
-                modifier = Modifier,
+                modifier = Modifier.width(100.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -171,8 +187,9 @@ fun ContestCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.End).clickable {
-                                setAlarm()
+                        .align(Alignment.CenterHorizontally)
+                        .clickable {
+                            setAlarm()
                         },
                 )
             }

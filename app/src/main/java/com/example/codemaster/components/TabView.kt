@@ -35,12 +35,14 @@ import kotlinx.coroutines.Dispatchers
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabView(
+    topBar : @Composable ()->Unit,
     setAlarm : ()-> Unit,
 ){
     val pagerState = rememberPagerState(0)
     Column(
         modifier = Modifier.background(Color.White)
     ) {
+        topBar()
         Tabs(pagerState = pagerState)
         TabsContent(pagerState = pagerState,setAlarm = setAlarm,)
     }
@@ -64,7 +66,7 @@ fun Tabs(pagerState: PagerState) {
             .background(Color.Unspecified),
         selectedTabIndex = pagerState.currentPage,
         containerColor = Color.White,
-//        edgePadding = 24.dp,
+        edgePadding = 24.dp,
         contentColor = Color.Black,
         indicator = {
             Box(
@@ -90,7 +92,7 @@ fun Tabs(pagerState: PagerState) {
                 text = {
                     Text(
                         text = list[index],
-                        color = if (pagerState.currentPage == index) MaterialTheme.colors.primary else Color.LightGray,
+                        color = if (pagerState.currentPage == index) Color.Black else Color.LightGray,
                         fontSize = 14.sp
                     )
                 },

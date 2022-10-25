@@ -3,12 +3,16 @@ package com.example.codemaster.ui.contest_screen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
@@ -35,6 +39,7 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OngoingContest(
+    setAlarm : ()-> Unit,
     contestViewModel: ContestViewModel = hiltViewModel()
 ){
     val state = contestViewModel.uiState.collectAsState().value
@@ -51,7 +56,7 @@ fun OngoingContest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Ongoing(data = state.data)
+            is ContestUiState.Success -> Ongoing(data = state.data, setAlarm = setAlarm)
         }
     }
 }
@@ -59,14 +64,17 @@ fun OngoingContest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Ongoing(
+    setAlarm : ()-> Unit,
     data : Contest
 ){
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(bottom = 52.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 52.dp)
     ) {
         items(data.filter { it.status == "CODING" }
         ){
-            OngoingCard(data = it)
+            OngoingCard(data = it, setAlarm = setAlarm)
         }
     }
 }
@@ -74,6 +82,7 @@ fun Ongoing(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OngoingCard(
+    setAlarm : ()-> Unit,
     data: ContestItem
 ) {
     Column(
@@ -85,9 +94,17 @@ fun OngoingCard(
             color = Color(0xFFF3F3F3),
             thickness = 2.dp
         )
-        Spacer(modifier = Modifier.height(0.dp))
-        Row(){
-            Column(modifier = Modifier.padding(15.dp)) {
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Column(
+                modifier = Modifier
+                .padding(15.dp)
+                .width(250.dp)
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val painter: Painter
                     if(data.site == "CodeChef")
@@ -110,7 +127,7 @@ fun OngoingCard(
                     )
                     Text(
                         text = data.site,
-                        modifier = Modifier.padding(5.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
                 Text(
@@ -140,6 +157,21 @@ fun OngoingCard(
                         text = "Duration: ${length.toString()} hrs"
                     )
                 }
+            }
+            Column(
+                modifier = Modifier.width(100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.icons_alarm),
+                    contentDescription = "Reminder",
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterHorizontally).clickable {
+                            setAlarm()
+                        },
+                )
             }
         }
     }
