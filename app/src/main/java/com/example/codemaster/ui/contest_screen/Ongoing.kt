@@ -1,6 +1,8 @@
 package com.example.codemaster.ui.contest_screen
 
+import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.MyApplication
 import com.example.codemaster.R
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
@@ -39,7 +42,7 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OngoingContest(
-    setAlarm : ()-> Unit,
+    intent : Intent,
     contestViewModel: ContestViewModel = hiltViewModel()
 ){
     val state = contestViewModel.uiState.collectAsState().value
@@ -56,7 +59,7 @@ fun OngoingContest(
                 }
             }
             is ContestUiState.Failure -> ErrorDialog(state.message)
-            is ContestUiState.Success -> Ongoing(data = state.data, setAlarm = setAlarm)
+            is ContestUiState.Success -> Ongoing(data = state.data, intent = intent)
         }
     }
 }
@@ -64,8 +67,8 @@ fun OngoingContest(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Ongoing(
-    setAlarm : ()-> Unit,
-    data : Contest
+    data : Contest,
+    intent: Intent
 ){
     LazyColumn(
         modifier = Modifier
@@ -74,7 +77,7 @@ fun Ongoing(
     ) {
         items(data.filter { it.status == "CODING" }
         ){
-            OngoingCard(data = it, setAlarm = setAlarm)
+            OngoingCard(data = it, intent = intent)
         }
     }
 }
@@ -82,8 +85,8 @@ fun Ongoing(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OngoingCard(
-    setAlarm : ()-> Unit,
-    data: ContestItem
+    data: ContestItem,
+    intent: Intent
 ) {
     Column(
         modifier = Modifier
@@ -138,7 +141,7 @@ fun OngoingCard(
                 //date
                 if(data.site == "CodeChef") {
                     Text(
-                        text =  "Start Date: ${data.start_time.toDate().formatTo("dd MMM, yyyy")}"
+                        text =  "Start Date: ${data.start_time.toDate()?.formatTo("dd MMM, yyyy")}"
                     )
                 }
                 else {
@@ -169,7 +172,14 @@ fun OngoingCard(
                     modifier = Modifier
                         .wrapContentSize()
                         .align(Alignment.CenterHorizontally).clickable {
-                            setAlarm()
+                            intent.putExtra("platform", data.site)
+                            intent.putExtra("contest", data.name)
+                            alarmService.setAlarm(
+                                MyApplication.instance,
+                                data.site,
+                                data.name,
+                                data.start_time
+                            )
                         },
                 )
             }

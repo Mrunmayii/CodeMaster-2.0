@@ -18,11 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.codemaster.components.BottomNav
-import com.example.codemaster.components.TopAppBar
-import com.example.codemaster.ui.contest_screen.ReminderReciever
-import com.example.codemaster.ui.home.HomeScreen
-import com.example.codemaster.ui.leetcode_screen.LeetcodeScreen
-import com.example.codemaster.ui.leetcode_screen.MainLCScreen
 import com.example.codemaster.utils.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
