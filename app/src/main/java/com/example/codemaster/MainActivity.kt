@@ -11,10 +11,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.codemaster.components.BottomNav
 import com.example.codemaster.components.TopAppBar
 import com.example.codemaster.ui.contest_screen.ReminderReciever
+import com.example.codemaster.ui.home.HomeScreen
+import com.example.codemaster.ui.leetcode_screen.LeetcodeScreen
+import com.example.codemaster.ui.leetcode_screen.MainLCScreen
 import com.example.codemaster.utils.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,19 +35,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+            var showBottomBar by rememberSaveable { mutableStateOf(true) }
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+            showBottomBar = when(navBackStackEntry?.destination?.route){
+                "home" -> false
+                "cf_problems" ->false
+                "cf_ratings" ->false
+                else -> true
+            }
             Scaffold(
-                topBar = { TopAppBar() },
-                bottomBar = { BottomNav(navController = navController) }
+//                topBar = { TopAppBar() },
+                bottomBar = { if(showBottomBar) BottomNav(navController = navController) }
             ) {
                 NavigationGraph(
                     navController = navController,
                     setAlarm = { setAlarm() }
                 )
             }
-////            HomeScreen()
+//            HomeScreen()
 ////            CFRatingChangeScreen()
 ////            CFProblemScreen()
-//
 //        }
         }
     }
@@ -59,5 +75,3 @@ class MainActivity : ComponentActivity() {
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi)
     }
 }
-
-

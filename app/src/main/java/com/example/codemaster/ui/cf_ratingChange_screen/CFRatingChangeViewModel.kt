@@ -38,7 +38,7 @@ class CFRatingChangeViewModel @Inject constructor(
                 else{
                     Log.d("kalp", "${resp.data}")
                     _uiState.value = CFRatingChangeUiState.Failure(
-                        message = "Soemthing Went Wrong"
+                        message = "Something Went Wrong"
                     )
                 }
             }

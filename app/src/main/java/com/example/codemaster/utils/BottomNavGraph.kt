@@ -7,8 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.codemaster.components.TabView
+import com.example.codemaster.components.TopAppBar
+import com.example.codemaster.ui.cf_problems_screen.CFProblemScreen
+import com.example.codemaster.ui.cf_ratingChange_screen.CFRatingChangeScreen
 import com.example.codemaster.ui.codechef_screen.Setdetail
 import com.example.codemaster.ui.codeforces_screen.MainCFSceen
+import com.example.codemaster.ui.home.HomeScreen
 import com.example.codemaster.ui.leetcode_screen.MainLCScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -19,22 +23,56 @@ fun NavigationGraph(
 ){
     NavHost(
         navController,
-
         startDestination = Nav.CONTESTS.route
     ){
         composable(Nav.CONTESTS.route){
-            TabView(setAlarm)
+            TabView(
+                topBar = { TopAppBar(
+                    title = "CODEMASTER",
+                    onNavigate = { navController.navigate(Nav2.HOME.route) }
+                ) },
+                setAlarm
+            )
         }
         composable(Nav.CODECHEF.route){
-            Setdetail()
+            Setdetail(
+                topBar = {
+                    TopAppBar(
+                        title = "CODECHEF",
+                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                    )
+                }
+            )
         }
         composable(Nav.CODEFORCES.route){
-            MainCFSceen()
+            MainCFSceen(
+                onNavigate= {navController.navigate(it.route)},
+                topBar = {
+                    TopAppBar(
+                        title = "CODEFORCES",
+                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                    )
+                }
+            )
         }
         composable(Nav.LEETCODE.route){
-            MainLCScreen()
+            MainLCScreen(
+                topBar = {
+                    TopAppBar(
+                        title = "LEETCODE",
+                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                    )
+                }
+            )
         }
-
+        composable(Nav2.HOME.route){
+            HomeScreen()
+        }
+        composable(Nav2.CFPROBLEMS.route){
+            CFProblemScreen()
+        }
+        composable(Nav2.CFRATINGS.route){
+            CFRatingChangeScreen()
+        }
     }
-
 }

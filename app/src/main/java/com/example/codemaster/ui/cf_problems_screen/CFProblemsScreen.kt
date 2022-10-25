@@ -2,6 +2,7 @@ package com.example.codemaster.ui.cf_problems_screen
 
 import android.os.Build
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,15 +44,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
+import com.example.codemaster.components.WebViewPager
 import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.Problem
 import com.example.codemaster.data.model.codeforces_offical.ProblemsetResult
+import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
+import com.example.codemaster.ui.codeforces_screen.CodeforcesViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -60,6 +65,7 @@ fun CFProblemScreen(
 ){
     val state = cfProblemsViewModel.uistate.collectAsState().value
     val showDialog = remember { mutableStateOf(false) }
+    val showWebView = remember { mutableStateOf(false) }
     val expanded = remember { mutableStateOf(false) }
     val tagList = tags()
 
@@ -81,6 +87,7 @@ fun CFProblemScreen(
                 list = state.list,
                 rating = state.rating,
                 showDialog,
+//                showWebView,
                 expanded,
                 tagList
             )
@@ -98,7 +105,11 @@ fun Problems(
     expanded : MutableState<Boolean>,
     tagList: ArrayList<String>
 ) {
-
+//    if(showWebView.value){
+//        WebViewPager(
+//            url = "https://codeforces.com/problemset/problem/${data[0].contestId}/${data[0].index}"
+//        )
+//    }
     if (showDialog.value) {
         TagDialog(
             tagList,
@@ -156,6 +167,7 @@ fun Problems(
         ) {
             items(data) {
                 ProblemCard(
+//                    showWebView = showWebView,
                     contestId = it.contestId.toString(),
                     index = it.index,
                     contestName = it.name,
@@ -177,8 +189,16 @@ fun ProblemCard(
     contestName : String,
     contestRating : String,
 ) {
+//    val showWebView = remember { mutableStateOf(false) }
+//    if(showWebView.value){
+//        WebViewPager(
+//            url = "https://codeforces.com/problemset/problem/${contestId}/${index}"
+//        )
+//    }
+
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Divider(
             modifier = Modifier.fillMaxSize(1f),
@@ -189,7 +209,7 @@ fun ProblemCard(
             modifier = Modifier
                 .padding(10.dp)
         ){
-            Row() {
+            Row {
                 Text(
                     text = "${contestId}${index}",
                     fontWeight = FontWeight.Bold,
@@ -198,7 +218,15 @@ fun ProblemCard(
                 )
                 Text(
                     text = contestName,
-                    modifier = Modifier.padding(end = 10.dp)
+                    modifier = Modifier
+                        .padding(end = 10.dp),
+//                        .clickable(
+//                            onClick = {
+//                                showWebView.value = true
+//                            }
+//                        ),
+                    textDecoration = TextDecoration.Underline,
+                    color = Color.Blue
                 )
                 Text(
                     text= contestRating,
@@ -214,7 +242,7 @@ fun ProblemCard(
 fun Menuu(
     list: ArrayList<String>,
     expanded: MutableState<Boolean>,
-    cfProblemsViewModel: CFProblemsViewModel = hiltViewModel()
+    cfProblemsViewModel: CFProblemsViewModel = hiltViewModel(),
 ) {
     DropdownMenu(
         expanded = expanded.value,
@@ -301,7 +329,6 @@ fun TagDialog(
                         state.value = false
                         Log.d("kalp", "$list")
                         viewModel.fetchProblems(list,rating)
-
                         list.clear()
                         Log.d("kalp", "$list")
                     },

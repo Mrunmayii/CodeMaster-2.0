@@ -28,8 +28,9 @@ fun BottomNav(navController: NavController){
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation(
         backgroundColor = Color.White,
-        elevation = 120.dp,
-        modifier = Modifier.height(62.dp),
+        elevation = 20.dp,
+        modifier = Modifier
+            .height(52.dp),
         contentColor = Color.Gray,
     ){
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -39,7 +40,7 @@ fun BottomNav(navController: NavController){
 //                selected = selectedItem == index,
                 icon = { Icon(painterResource(id = item.icon), contentDescription = null) },
 //                onClick = { selectedItem = index },
-                selectedContentColor = MaterialTheme.colors.primary,
+                selectedContentColor = Color.Black,
                 unselectedContentColor = Color.LightGray,
                 selected = currentRoute == item.route,
                 onClick = {

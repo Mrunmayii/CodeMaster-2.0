@@ -3,6 +3,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ScrollableTabRow
@@ -21,6 +23,11 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Tab
+import androidx.compose.ui.draw.clip
+import com.example.codemaster.ui.contest_screen.FutureContest
+import com.example.codemaster.ui.contest_screen.Ongoing
+import com.example.codemaster.ui.contest_screen.OngoingCard
+import com.example.codemaster.ui.contest_screen.OngoingContest
 import kotlinx.coroutines.Dispatchers
 
 // Tab Holder
@@ -28,12 +35,14 @@ import kotlinx.coroutines.Dispatchers
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabView(
+    topBar : @Composable ()->Unit,
     setAlarm : ()-> Unit,
 ){
     val pagerState = rememberPagerState(0)
     Column(
         modifier = Modifier.background(Color.White)
     ) {
+        topBar()
         Tabs(pagerState = pagerState)
         TabsContent(pagerState = pagerState,setAlarm = setAlarm,)
     }
@@ -45,8 +54,8 @@ fun TabView(
 fun Tabs(pagerState: PagerState) {
     val list = listOf(
         "Ongoing",
-        "Today",
-        "Upcoming"
+        "In 24 hrs",
+        "Future"
     )
     val scope = rememberCoroutineScope()
 
@@ -77,6 +86,7 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(50))
                     .background(Color.White)
                     .padding(vertical = 2.dp),
                 text = {
@@ -106,9 +116,9 @@ fun TabsContent(
 ) {
     HorizontalPager(state = pagerState, count = 3) { page ->
         when (page) {
-            0 -> Contest(setAlarm)
+            0 -> OngoingContest(setAlarm)
             1 -> Contest(setAlarm)
-            2 -> Contest(setAlarm)
+            2 -> FutureContest(setAlarm)
         }
     }
 }
