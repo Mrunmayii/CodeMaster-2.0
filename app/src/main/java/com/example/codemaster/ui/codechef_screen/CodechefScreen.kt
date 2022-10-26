@@ -171,18 +171,23 @@ fun Setdetail(
     }
     Column {
         topBar()
-        val state = codechefViewModel.uiState.collectAsState()
-        var showProgress by remember { mutableStateOf(false) }
-        var errorState by remember { mutableStateOf(false) }
-        val navController : NavHostController
-        LaunchedEffect(key1 = Unit) {
-            when (state.value) {
-                // Same as in the question
-                is CodechefUiState.Empty -> showProgress = true
-                is CodechefUiState.Loading -> showProgress = true
-                is CodechefUiState.Failure -> errorState = true
-                is CodechefUiState.Success -> navController.navigate(Nav2.HOME.route)
-            }
+        when (val state = codechefViewModel.uiState.collectAsState().value) {
+            is CodechefUiState.Empty -> Text(
+                text = "No data available",
+                modifier = Modifier.padding(16.dp)
+            )
+            is CodechefUiState.Loading ->
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        color = Color(194, 169, 252, 255)
+                    )
+                }
+            is CodechefUiState.Failure -> ErrorDialog(state.message)
+            is CodechefUiState.Success -> CodechefScreen(state.data)
         }
     }
 }
