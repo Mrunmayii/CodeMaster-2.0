@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.codemaster.components.BottomNav
+import com.example.codemaster.ui.cf_problems_screen.CFProblemScreen
 import com.example.codemaster.utils.NavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
             }
 ////            HomeScreen()
 ////            CFRatingChangeScreen()
-////            CFProblemScreen()
+//            CFProblemScreen()
 //        }
         }
     }

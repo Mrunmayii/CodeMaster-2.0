@@ -26,18 +26,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.MyApplication
 import com.example.codemaster.R
+import com.example.codemaster.WebViewActivity
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.Contest
 import com.example.codemaster.data.model.ContestItem
+import com.example.codemaster.ui.cf_problems_screen.Nul
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
+val font = FontFamily(Font(R.font.varelaround_regular))
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -70,13 +76,16 @@ fun Ongoing(
     data : Contest,
     intent: Intent
 ){
+    val list = data.filter {  it.status == "CODING" }
+    if(list.isEmpty()){
+        Nul("No Upcoming Contests!")
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 52.dp)
     ) {
-        items(data.filter { it.status == "CODING" }
-        ){
+        items(list){
             OngoingCard(data = it, intent = intent)
         }
     }
@@ -107,6 +116,12 @@ fun OngoingCard(
                 modifier = Modifier
                 .padding(15.dp)
                 .width(250.dp)
+                .clickable {
+                    val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+                    myIntent.putExtra("key", data.url)
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    MyApplication.instance.startActivity(myIntent)
+                }
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val painter: Painter
@@ -130,25 +145,29 @@ fun OngoingCard(
                     )
                     Text(
                         text = data.site,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        fontFamily = font
                     )
                 }
                 Text(
                     text = data.name,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = font
                 )
 
                 //date
                 if(data.site == "CodeChef") {
                     Text(
-                        text =  "Start Date: ${data.start_time.toDate()?.formatTo("dd MMM, yyyy")}"
+                        text =  "Start : ${data.start_time.toDate()?.formatTo("dd MMM, yyyy")}",
+                        fontFamily = font
                     )
                 }
                 else {
                     val odt = OffsetDateTime.parse(data.start_time)
                     val dtf = DateTimeFormatter.ofPattern("dd MMM, uuuu", Locale.ENGLISH)
                     Text(
-                        text = "Start Date: ${ dtf.format(odt) }"
+                        text = "Start : ${ dtf.format(odt) }",
+                        fontFamily = font
                     )
                 }
 
@@ -157,7 +176,8 @@ fun OngoingCard(
                 val length = x?.div(3600)
                 if(length != null){
                     Text(
-                        text = "Duration: ${length.toString()} hrs"
+                        text = "Duration : ${length.toString()} hrs",
+                        fontFamily = font
                     )
                 }
             }
@@ -171,7 +191,8 @@ fun OngoingCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.CenterHorizontally).clickable {
+                        .align(Alignment.CenterHorizontally)
+                        .clickable {
                             intent.putExtra("platform", data.site)
                             intent.putExtra("contest", data.name)
                             alarmService.setAlarm(

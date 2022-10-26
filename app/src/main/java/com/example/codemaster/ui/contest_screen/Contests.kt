@@ -31,11 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.MyApplication
 import com.example.codemaster.R
+import com.example.codemaster.WebViewActivity
 import com.example.codemaster.broadcasts.SetAlarmBroadcast
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.Contest
 import com.example.codemaster.data.model.ContestItem
+import com.example.codemaster.ui.cf_problems_screen.Nul
 import java.text.SimpleDateFormat
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -79,14 +81,16 @@ fun Contests(
     data: Contest,
     intent: Intent
 ) {
+    val list = data.filter {  it.in_24_hours == "Yes" }
+    if(list.isEmpty()){
+        Nul("No Upcoming Contests!")
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 52.dp)
     ) {
-        items(
-            data.filter { it.in_24_hours == "Yes" }
-        ) {
+        items( list ) {
             ContestCard(
                 data = it,
                 intent = intent
@@ -108,12 +112,13 @@ fun ContestCard(
     ){
         Divider(
             modifier = Modifier.fillMaxSize(1f),
-            color = Color(0xFFF2F2F5),
+            color = Color(0xFFF3F3F3),
             thickness = 2.dp
         )
         Spacer(modifier = Modifier.height(4.dp))
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
@@ -121,18 +126,19 @@ fun ContestCard(
                 modifier = Modifier
                     .padding(15.dp)
                     .width(250.dp)
+                    .clickable {
+                        val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+                        myIntent.putExtra("key", data.url)
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        MyApplication.instance.startActivity(myIntent)
+                    }
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val painter: Painter
-                    var colour: Color = Color.Black
-                    if(data.site == "CodeChef") {
+                    if(data.site == "CodeChef")
                         painter = painterResource(id = R.drawable.icons_codechef)
-                        colour = Color.Red
-                    }
-                    else if(data.site == "CodeForces") {
+                    else if(data.site == "CodeForces")
                         painter = painterResource(id = R.drawable.icons_codeforces)
-                        colour = Color(0xFF66C1EE)
-                    }
                     else if(data.site == "LeetCode")
                         painter = painterResource(id = R.drawable.icons_leetcode)
                     else if(data.site == "HackerRank")
@@ -150,19 +156,20 @@ fun ContestCard(
                     Text(
                         text = data.site,
                         modifier = Modifier.padding(8.dp),
-                        color = colour,
-                        fontWeight = Bold
+                        fontFamily = font
                     )
                 }
                 Text(
                     text = data.name,
-                    fontWeight = Bold
+                    fontWeight = Bold,
+                    fontFamily = font
                 )
                 //date
                 if(data.site == "CodeChef") {
                     data.start_time.toDate()?.let {
                         Text(
-                            text =  it.formatTo("dd MMM, yyyy")
+                            text =  it.formatTo("dd MMM, yyyy"),
+                            fontFamily = font
                         )
                     }
                 }
@@ -170,20 +177,17 @@ fun ContestCard(
                     val odt = OffsetDateTime.parse(data.start_time)
                     val dtf = DateTimeFormatter.ofPattern("dd MMM, uuuu", Locale.ENGLISH)
                     Text(
-                        text = dtf.format(odt)
+                        text = dtf.format(odt),
+                        fontFamily = font
                     )
                 }
                 //no. of hours
                 val x = (data.duration).toIntOrNull()
                 val length = x?.div(3600)
-                if(length == null){
+                if(length != null){
                     Text(
-                        text = ""
-                    )
-                }
-                else{
-                    Text(
-                        text = "Duration: ${length.toString()} hrs"
+                        text = "Duration : ${length.toString()} hrs",
+                        fontFamily = font
                     )
                 }
             }
@@ -197,7 +201,7 @@ fun ContestCard(
                     contentDescription = "Reminder",
                     modifier = Modifier
                         .wrapContentSize()
-                        .align(Alignment.End)
+                        .align(Alignment.CenterHorizontally)
                         .clickable {
                             intent.putExtra("platform", data.site)
                             intent.putExtra("contest", data.name)

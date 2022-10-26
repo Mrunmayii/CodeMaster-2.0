@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codemaster.utils.Nav
+import com.example.codemaster.utils.Nav2
 import com.example.codemaster.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +22,7 @@ class TopBarViewModel @Inject constructor(): ViewModel() {
     fun onEvent(event: TopBarUiEvent){
         when(event){
             is TopBarUiEvent.onSettingsClick->{
-                sendUiEvent(UiEvent.Navigate(Nav.CODECHEF.route))
+                sendUiEvent(UiEvent.Navigate(Nav2.HOME.route))
             }
             else -> Unit
         }

@@ -1,14 +1,14 @@
 package com.example.codemaster.ui.cf_problems_screen
 
+import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -42,6 +44,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
@@ -51,11 +55,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.MyApplication
+import com.example.codemaster.WebViewActivity
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.components.WebViewPager
 import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.Problem
+import com.example.codemaster.ui.leetcode_screen.font
 import com.example.codemaster.data.model.codeforces_offical.ProblemsetResult
 import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
 import com.example.codemaster.ui.codeforces_screen.CodeforcesViewModel
@@ -67,44 +74,64 @@ fun CFProblemScreen(
 ){
     val state = cfProblemsViewModel.uistate.collectAsState().value
     val showDialog = remember { mutableStateOf(false) }
-    val showWebView = remember { mutableStateOf(false) }
     val expanded = remember { mutableStateOf(false) }
     val tagList = tags()
 
-    Column(modifier = Modifier.fillMaxHeight()){
+
+    Column (
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Problem Set",
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp
-            )
-            Icon(
-                imageVector = Icons.Default.Info, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            expanded.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
-            Icon(
-                imageVector = Icons.Default.DateRange, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            showDialog.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
+            Column {
+                Text(
+                    text = "Problem Set",
+                    modifier = Modifier
+                        .padding(start = 20.dp, top = 15.dp, bottom = 10.dp),
+                    textAlign = TextAlign.Start,
+                    fontFamily = font,
+                    fontSize = 20.sp,
+                    color = Color(0xFF2A265C)
+                )
+            }
+            Column(
+                modifier = Modifier.padding(15.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info, contentDescription = "null",
+                        modifier = Modifier
+                            .padding(end = 30.dp)
+                            .align(Alignment.CenterVertically)
+                            .clickable(
+                                onClick = {
+                                    expanded.value = true
+                                }
+                            ),
+                        tint = Color(0xFF2A265C),
+                    )
+                    Icon(
+                        imageVector = Icons.Default.DateRange, contentDescription = "null",
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .align(Alignment.CenterVertically)
+                            .clickable(
+                                onClick = {
+                                    showDialog.value = true
+                                }
+                            ),
+                        tint = Color(0xFF2A265C),
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.width(5.dp))
         when(state){
@@ -159,9 +186,9 @@ fun Problems(
         Menuu(list,expanded)
     }
     if(data.isEmpty()){
-        Nul()
+        Nul("No result found!");
     }
-    Column {
+    Column{
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -169,7 +196,6 @@ fun Problems(
         ) {
             items(data) {
                 ProblemCard(
-//                  showWebView = showWebView,
                     contestId = it.contestId.toString(),
                     index = it.index,
                     contestName = it.name,
@@ -181,9 +207,19 @@ fun Problems(
 }
 
 @Composable
-fun Nul(){
-    Box(modifier = Modifier.fillMaxSize().padding(40.dp), contentAlignment = Alignment.Center){
-        Text(text = "No result found")
+fun Nul(msg : String){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(40.dp),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = msg,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp,
+            fontFamily = font
+        )
     }
 }
 @Composable
@@ -193,49 +229,73 @@ fun ProblemCard(
     contestName : String,
     contestRating : String,
 ) {
-//    val showWebView = remember { mutableStateOf(false) }
-//    if(showWebView.value){
-//        WebViewPager(
-//            url = "https://codeforces.com/problemset/problem/${contestId}/${index}"
-//        )
-//    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xE9ECEAF8))
     ) {
         Divider(
             modifier = Modifier.fillMaxSize(1f),
-            color = Color(0xFFE6E6F0),
+            color = Color(0xFFF3F3F3),
             thickness = 2.dp
         )
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .background(Color(0xFFFFFFFF))
+                .padding(start =10.dp, top = 20.dp, bottom = 20.dp, end = 10.dp)
         ){
-            Row {
-                Text(
-                    text = "${contestId}${index}",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 10.dp)
-
-                )
-                Text(
-                    text = contestName,
+            val url = "https://codeforces.com/problemset/problem/${contestId}/${index}"
+            Row (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        onClick = {
+                            val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+                            myIntent.putExtra("key", url)
+                            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            MyApplication.instance.startActivity(myIntent)
+                        }
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ){
+                Column(
                     modifier = Modifier
-                        .padding(end = 10.dp),
-//                        .clickable(
-//                            onClick = {
-//                                showWebView.value = true
-//                            }
-//                        ),
-                    textDecoration = TextDecoration.Underline,
-                    color = Color.Blue
-                )
-                Text(
-                    text= contestRating,
-                    textAlign = TextAlign.End,
-                )
+                        .width(70.dp)
+                ) {
+                    Text(
+                        text = "${contestId}${index}",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier,
+                        fontFamily = font,
+                        color = Color(0xFF2A265C)
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .width(200.dp)
+                ) {
+                    Text(
+                        text = contestName,
+                        modifier = Modifier,
+                        textDecoration = TextDecoration.Underline,
+                        fontFamily = font,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF2A265C)
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .width(50.dp),
+                    horizontalAlignment = Alignment.End
+                ){
+                    Text(
+                        text= contestRating,
+                        textAlign = TextAlign.End,
+                        fontFamily = font,
+                        color = Color(0xFF2A265C)
+                    )
+                }
             }
         }
     }
@@ -285,8 +345,9 @@ fun TagDialog(
                 ) {
                     Text(
                         text = "Select tag",
-                        fontSize = 28.sp,
-                        modifier = Modifier.padding(0.dp,10.dp,0.dp,10.dp)
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(0.dp,10.dp,0.dp,10.dp),
+                        fontFamily = font
                     )
                     Divider(modifier = Modifier.padding(bottom = 10.dp))
                 }
@@ -319,7 +380,8 @@ fun TagDialog(
                                 text = text,
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.body1.merge(),
-                                modifier = Modifier.padding(start = 8.dp)
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontFamily = font
                             )
                         }
                     }
