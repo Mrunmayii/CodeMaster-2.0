@@ -9,7 +9,12 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,12 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.data.model.Codechef
+import com.example.codemaster.utils.Nav2
 import com.madrapps.plot.line.DataPoint
 import com.madrapps.plot.line.LineGraph
 import com.madrapps.plot.line.LinePlot
+import kotlinx.coroutines.channels.produce
 
 @Composable
 fun CodechefScreen(
@@ -163,23 +171,18 @@ fun Setdetail(
     }
     Column {
         topBar()
-        when (val state = codechefViewModel.uiState.collectAsState().value) {
-            is CodechefUiState.Empty -> Text(
-                text = "No data available",
-                modifier = Modifier.padding(16.dp)
-            )
-            is CodechefUiState.Loading ->
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(
-                        color = Color(194, 169, 252, 255)
-                    )
-                }
-            is CodechefUiState.Failure -> ErrorDialog(state.message)
-            is CodechefUiState.Success -> CodechefScreen(state.data)
+        val state = codechefViewModel.uiState.collectAsState()
+        var showProgress by remember { mutableStateOf(false) }
+        var errorState by remember { mutableStateOf(false) }
+        val navController : NavHostController
+        LaunchedEffect(key1 = Unit) {
+            when (state.value) {
+                // Same as in the question
+                is CodechefUiState.Empty -> showProgress = true
+                is CodechefUiState.Loading -> showProgress = true
+                is CodechefUiState.Failure -> errorState = true
+                is CodechefUiState.Success -> navController.navigate(Nav2.HOME.route)
+            }
         }
     }
 }

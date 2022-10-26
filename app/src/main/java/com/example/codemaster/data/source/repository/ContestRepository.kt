@@ -7,6 +7,9 @@ import com.example.codemaster.data.model.Leetcode
 import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.UserInfo
 import com.example.codemaster.data.model.codeforces_offical.UserRatingChange
+import com.example.codemaster.data.source.local.enitity.CCUsername
+import com.example.codemaster.data.source.local.enitity.CFUsername
+import com.example.codemaster.data.source.local.enitity.LCUsername
 import com.example.codemaster.data.source.local.enitity.Username
 import kotlinx.coroutines.flow.Flow
 import com.example.codemaster.utils.Result
@@ -25,9 +28,15 @@ interface ContestRepository {
     suspend fun getUserInfo(handle : String) : Result<UserInfo?>
 
     // room database
-    suspend fun storeCodechefUsername(userName : Username)
-    suspend fun storeCodeforcesUsername(userName : Username)
-    suspend fun storeLeetcodeUsername(userName: Username)
+    suspend fun storeCodechefUsername(userName : CCUsername)
+    suspend fun storeCodeforcesUsername(userName : CFUsername)
+    suspend fun storeLeetcodeUsername(userName: LCUsername)
+    suspend fun storeUsername(username: Username)
+
+
+    suspend fun getCCUsername(id : Int) : CCUsername?
+    suspend fun getCFUsername(id : Int) : CFUsername?
+    suspend fun getLCUsername(id : Int) : LCUsername?
 
     suspend fun getUsername(id : Int) : Username?
 

@@ -8,6 +8,9 @@ import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.UserInfo
 import com.example.codemaster.data.model.codeforces_offical.UserRatingChange
 import com.example.codemaster.data.source.local.dao.UsernameDao
+import com.example.codemaster.data.source.local.enitity.CCUsername
+import com.example.codemaster.data.source.local.enitity.CFUsername
+import com.example.codemaster.data.source.local.enitity.LCUsername
 import com.example.codemaster.data.source.local.enitity.Username
 import com.example.codemaster.data.source.remote.retrofit.CFCCApi
 import com.example.codemaster.data.source.remote.retrofit.CodeforcesApi
@@ -106,20 +109,56 @@ class ContestRepositoryImpl @Inject constructor(
             }
         }
 
-
-    // local implementation
-    override suspend fun storeCodechefUsername(userName: Username) =
+    override suspend fun storeCodechefUsername(userName: CCUsername) {
         withContext(ioDispatcher){
             usernameDao.storeCodechefUsername(userName)
         }
-    override suspend fun storeCodeforcesUsername(userName: Username) =
+    }
+
+    override suspend fun storeCodeforcesUsername(userName: CFUsername) {
         withContext(ioDispatcher){
             usernameDao.storeCodeforcesUsername(userName)
         }
-    override suspend fun storeLeetcodeUsername(userName: Username) =
+    }
+
+    override suspend fun storeLeetcodeUsername(userName: LCUsername) {
         withContext(ioDispatcher){
             usernameDao.storeLeetcodeUsername(userName)
         }
+    }
+
+    override suspend fun storeUsername(username: Username) {
+        withContext(ioDispatcher){
+            usernameDao.storeUsername(username)
+        }
+    }
+
+    override suspend fun getCCUsername(id: Int): CCUsername? {
+        return usernameDao.getCCUsername(id)
+    }
+
+    override suspend fun getCFUsername(id: Int): CFUsername? {
+        return usernameDao.getCFUsername(id)
+    }
+
+    override suspend fun getLCUsername(id: Int): LCUsername? {
+        return usernameDao.getLCUsername(id)
+    }
+
+
+    // local implementation
+//    override suspend fun storeCodechefUsername(userName: Username) =
+//        withContext(ioDispatcher){
+//            usernameDao.storeCodechefUsername(userName)
+//        }
+//    override suspend fun storeCodeforcesUsername(userName: Username) =
+//        withContext(ioDispatcher){
+//            usernameDao.storeCodeforcesUsername(userName)
+//        }
+//    override suspend fun storeLeetcodeUsername(userName: Username) =
+//        withContext(ioDispatcher){
+//            usernameDao.storeLeetcodeUsername(userName)
+//        }
 
     override suspend fun getUsername(id: Int): Username? {
         return usernameDao.getUsername(id)

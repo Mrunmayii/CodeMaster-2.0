@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -70,6 +72,41 @@ fun CFProblemScreen(
     val tagList = tags()
 
     Column(modifier = Modifier.fillMaxHeight()){
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                text = "Problem Set",
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp
+            )
+            Icon(
+                imageVector = Icons.Default.Info, contentDescription = "null",
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .clickable(
+                        onClick = {
+                            expanded.value = true
+                        }
+                    ),
+                tint = Color.Black,
+            )
+            Icon(
+                imageVector = Icons.Default.DateRange, contentDescription = "null",
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .clickable(
+                        onClick = {
+                            showDialog.value = true
+                        }
+                    ),
+                tint = Color.Black,
+            )
+        }
+        Spacer(modifier = Modifier.width(5.dp))
         when(state){
             is CFProblemsUiState.Empty -> Column {
                 repeat(7){
@@ -122,44 +159,9 @@ fun Problems(
         Menuu(list,expanded)
     }
     if(data.isEmpty()){
-        Nul();
+        Nul()
     }
     Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Text(
-                text = "Problem Set",
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp
-            )
-            Icon(
-                imageVector = Icons.Default.Info, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            expanded.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
-            Icon(
-                imageVector = Icons.Default.DateRange, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            showDialog.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
-        }
-        Spacer(modifier = Modifier.width(5.dp))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -167,7 +169,7 @@ fun Problems(
         ) {
             items(data) {
                 ProblemCard(
-//                    showWebView = showWebView,
+//                  showWebView = showWebView,
                     contestId = it.contestId.toString(),
                     index = it.index,
                     contestName = it.name,
@@ -180,7 +182,9 @@ fun Problems(
 
 @Composable
 fun Nul(){
-    Text(text = "No result found")
+    Box(modifier = Modifier.fillMaxSize().padding(40.dp), contentAlignment = Alignment.Center){
+        Text(text = "No result found")
+    }
 }
 @Composable
 fun ProblemCard(
