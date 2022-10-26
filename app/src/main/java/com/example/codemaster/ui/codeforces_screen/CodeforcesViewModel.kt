@@ -3,6 +3,8 @@ package com.example.codemaster.ui.codeforces_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codemaster.data.source.local.enitity.CCUsername
+import com.example.codemaster.data.source.local.enitity.CFUsername
 import com.example.codemaster.data.source.repository.ContestRepository
 import com.example.codemaster.utils.Nav2
 import com.example.codemaster.utils.UiEvent
@@ -27,7 +29,11 @@ class CodeforcesViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init{
-        fetchCodeforces()
+        viewModelScope.launch {
+            val username = repository.getCFUsername(1)?.codeforces ?: "codeforces"
+            fetchCodeforces(username)
+        }
+
     }
 
     fun onEvent(event: CodeforcesUiEvent){
@@ -41,10 +47,9 @@ class CodeforcesViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCodeforces() {
+    fun fetchCodeforces(username : String) {
         viewModelScope.launch {
             try {
-                val username = repository.getUsername(1)?.codeforces ?: "codeforces"
                 val resp = repository.getUserInfo(username)
                 val graphResp = repository.getCodeforces(username)
                 if (resp.data != null) {
@@ -65,7 +70,22 @@ class CodeforcesViewModel @Inject constructor(
             }
         }
     }
-
+    fun saveCFUser(CFusername: String){
+        viewModelScope.launch {
+            repository.storeCodeforcesUsername(
+                CFUsername(
+                    codeforces = CFusername
+                )
+            )
+        }
+    }
+    fun validateCodeforcesUser(username : String): Boolean {
+        var ans = true
+        viewModelScope.launch {
+            if(repository.getCodeforces(username).data == null) ans = false
+        }
+        return ans
+    }
     private fun sendUiEvent(event: UiEvent){
         viewModelScope.launch {
             _uiEvent.send(event)

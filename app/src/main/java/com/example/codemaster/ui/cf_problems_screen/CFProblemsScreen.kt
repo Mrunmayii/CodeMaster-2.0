@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -50,7 +51,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
+import com.example.codemaster.components.WebViewPager
+import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.Problem
+import com.example.codemaster.data.model.codeforces_offical.ProblemsetResult
+import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
+import com.example.codemaster.ui.codeforces_screen.CodeforcesViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -64,6 +70,41 @@ fun CFProblemScreen(
     val tagList = tags()
 
     Column(modifier = Modifier.fillMaxHeight()){
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                text = "Problem Set",
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp
+            )
+            Icon(
+                imageVector = Icons.Default.Info, contentDescription = "null",
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .clickable(
+                        onClick = {
+                            expanded.value = true
+                        }
+                    ),
+                tint = Color.Black,
+            )
+            Icon(
+                imageVector = Icons.Default.DateRange, contentDescription = "null",
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .clickable(
+                        onClick = {
+                            showDialog.value = true
+                        }
+                    ),
+                tint = Color.Black,
+            )
+        }
+        Spacer(modifier = Modifier.width(5.dp))
         when(state){
             is CFProblemsUiState.Empty -> Column {
                 repeat(7){
@@ -116,44 +157,9 @@ fun Problems(
         Menuu(list,expanded)
     }
     if(data.isEmpty()){
-        Nul();
+        Nul()
     }
     Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Problem Set",
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp
-            )
-            Icon(
-                imageVector = Icons.Default.Info, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            expanded.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
-            Icon(
-                imageVector = Icons.Default.DateRange, contentDescription = "null",
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable(
-                        onClick = {
-                            showDialog.value = true
-                        }
-                    ),
-                tint = Color.Black,
-            )
-        }
-        Spacer(modifier = Modifier.width(5.dp))
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

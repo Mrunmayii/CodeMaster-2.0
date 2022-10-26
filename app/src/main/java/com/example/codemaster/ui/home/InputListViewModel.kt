@@ -1,10 +1,12 @@
 package com.example.codemaster.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codemaster.data.source.local.enitity.CCUsername
 import com.example.codemaster.data.source.local.enitity.Username
 import com.example.codemaster.data.source.repository.ContestRepository
 import com.example.codemaster.utils.UiEvent
@@ -21,19 +23,21 @@ import javax.inject.Inject
 class InputListViewModel @Inject constructor(
     private val repository: ContestRepository,
 ): ViewModel() {
-    var CCusername by mutableStateOf("")
+    var cc by mutableStateOf("")
         private set
-    var CFusername by mutableStateOf("")
+    var cf by mutableStateOf("")
         private set
-    var LCusername by mutableStateOf("")
+    var lc by mutableStateOf("")
         private set
+    init {
+        viewModelScope.launch {
+            cc = repository.getCCUsername(1)?.codechef ?: "codechef"
+            cf = repository.getCFUsername(1)?.codeforces ?: "codeforces"
+            lc = repository.getLCUsername(1)?.leetcode ?: "leetcode"
+        }
+    }
 
-    var cc by mutableStateOf("cc")
-        private set
-    var cf by mutableStateOf("cf")
-        private set
-    var lc by mutableStateOf("lc")
-        private set
+
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -41,13 +45,14 @@ class InputListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState
 
-    init {
-        viewModelScope.launch {
-            cc = repository.getUsername(1)?.codechef ?: "codechef"
-            cf = repository.getUsername(1)?.codeforces ?: "codeforces"
-            lc = repository.getUsername(1)?.leetcode ?: "leetcode"
-        }
-    }
+    var CCusername by mutableStateOf(cc)
+        private set
+    var CFusername by mutableStateOf(cf)
+        private set
+    var LCusername by mutableStateOf(lc)
+        private set
+
+
 
     fun onEvent(event : InputListEvent) {
         when (event) {
@@ -62,7 +67,7 @@ class InputListViewModel @Inject constructor(
             }
             is InputListEvent.OnClick -> {
                 viewModelScope.launch {
-                    repository.storeCodechefUsername(
+                    repository.storeUsername(
                         Username(
                             codechef = CCusername,
                             codeforces = CFusername,
@@ -70,6 +75,7 @@ class InputListViewModel @Inject constructor(
                         )
                     )
                 }
+                Log.d("kkkk","${CCusername},${CFusername},${LCusername}")
             }
         }
     }

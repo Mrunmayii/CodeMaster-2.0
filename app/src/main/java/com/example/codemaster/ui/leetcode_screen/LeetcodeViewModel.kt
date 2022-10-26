@@ -2,6 +2,8 @@ package com.example.codemaster.ui.leetcode_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codemaster.data.source.local.enitity.CCUsername
+import com.example.codemaster.data.source.local.enitity.LCUsername
 import com.example.codemaster.data.source.repository.ContestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,14 +20,16 @@ class LeetcodeViewModel @Inject constructor (
     val uiState: StateFlow<LeetcodeUiState> = _uiState
 
     init{
-        fetchLeetcode()
+        viewModelScope.launch {
+            val username = repository.getLCUsername(1)?.leetcode?:"leetcode"
+            fetchLeetcode(username)
+        }
     }
 
-    private fun fetchLeetcode() {
+    fun fetchLeetcode(username:String) {
         _uiState.value = LeetcodeUiState.Loading
         viewModelScope.launch {
             try{
-                val username = repository.getUsername(1)?.leetcode?:"leetcode"
                 val resp = repository.getLeetCode(username)
                 if(resp.data != null){
                     _uiState.value = LeetcodeUiState.Success(
@@ -43,6 +47,24 @@ class LeetcodeViewModel @Inject constructor (
                     message = "Something went wrong"
                 )
             }
+        }
+    }
+
+    fun validateLeetcodeUser(username : String): Boolean {
+        var ans = false
+        viewModelScope.launch {
+            if(repository.getLeetCode(username).data != null) ans = true
+        }
+        return ans
+    }
+
+    fun saveLCUser(LCusername: String){
+        viewModelScope.launch {
+            repository.storeLeetcodeUsername(
+                LCUsername(
+                    leetcode = LCusername
+                )
+            )
         }
     }
 }

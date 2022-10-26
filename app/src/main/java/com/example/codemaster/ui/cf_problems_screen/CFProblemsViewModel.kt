@@ -3,11 +3,14 @@ package com.example.codemaster.ui.cf_problems_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.codemaster.data.model.Codechef
 import com.example.codemaster.data.model.codeforces_offical.CodeforcesProblemset
 import com.example.codemaster.data.model.codeforces_offical.Problem
 import com.example.codemaster.data.model.codeforces_offical.ProblemsetResult
+import com.example.codemaster.data.source.local.enitity.Username
 import com.example.codemaster.data.source.repository.ContestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -61,4 +64,5 @@ class CFProblemsViewModel @Inject constructor(
             }
         }
     }
+
 }
