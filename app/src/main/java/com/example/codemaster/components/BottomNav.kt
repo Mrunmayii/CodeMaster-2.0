@@ -28,7 +28,7 @@ fun BottomNav(navController: NavController){
     var selectedItem by remember { mutableStateOf(0) }
     BottomNavigation(
         backgroundColor = Color.White,
-        elevation = 20.dp,
+        elevation = 30.dp,
         modifier = Modifier
             .height(52.dp),
         contentColor = Color.Gray,
@@ -40,7 +40,7 @@ fun BottomNav(navController: NavController){
 //                selected = selectedItem == index,
                 icon = { Icon(painterResource(id = item.icon), contentDescription = null) },
 //                onClick = { selectedItem = index },
-                selectedContentColor = Color.Black,
+                selectedContentColor = Color(0xFF2A265C),
                 unselectedContentColor = Color.LightGray,
                 selected = currentRoute == item.route,
                 onClick = {

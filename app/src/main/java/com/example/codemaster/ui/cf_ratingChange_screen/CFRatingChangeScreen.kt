@@ -2,6 +2,8 @@ package com.example.codemaster.ui.cf_ratingChange_screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +33,7 @@ import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.Shimmer
 import com.example.codemaster.data.model.codeforces_offical.RatingChangeResult
 import com.example.codemaster.data.model.codeforces_offical.UserRatingChange
+import com.example.codemaster.ui.leetcode_screen.font
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -80,48 +84,48 @@ fun RatingCard(
     ) {
         Divider(
             modifier = Modifier.fillMaxSize(1f),
-            color = Color(0xFFE6E6F0),
-            thickness = 2.dp
+            color = Color(0xFFFFFFFF),
+            thickness = 5.dp
         )
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
+        Row(
+            modifier = Modifier.fillMaxSize().background(Color(0xFFEEF0FD)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ){
-            Row() {
-                Column(
-                    modifier = Modifier
-                        .width(150.dp)
-                ) {
-                    Text(
-                        text = data.contestName,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(modifier = Modifier.width(125.dp))
-                Column() {
+            Column(
+                modifier = Modifier
+                .padding(15.dp)
+                .width(250.dp)
+            ) {
+                Text(
+                    text = data.contestName,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = font
+                )
+                Text(
+                    text= "New Rating: ${data.newRating}",
+                    fontFamily = font
+                )
+                Text(
+                    text = "Rank: ${data.rank}",
+                    fontFamily = font
+                )
+            }
+            Column(
+                modifier = Modifier.width(100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row {
                     val change = data.newRating - data.oldRating
                     Text(
                         text = if (change > 0) "+$change" else "$change",
                         color = if (change > 0) Color(0xFF3D963D) else Color.Red,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        fontFamily = font
                     )
                 }
-            }
-//            Spacer(modifier = Modifier.width(15.dp))
-            Row(
-                modifier = Modifier
-            ) {
-                val change = data.newRating-data.oldRating
-                Text(
-                    text= "New Rating: ${data.newRating}"
-                )
-            }
-//            Spacer(modifier = Modifier.width(25.dp))
-            Row(
-                modifier = Modifier
-            ) {
-                Text(text = "Rank: ${data.rank}")
             }
         }
     }

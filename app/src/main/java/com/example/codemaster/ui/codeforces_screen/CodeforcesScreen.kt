@@ -1,11 +1,13 @@
 package com.example.codemaster.ui.codeforces_screen
 
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,18 +30,25 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.example.codemaster.R
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.data.model.Codeforces
 import com.example.codemaster.data.model.codeforces_offical.UserInfo
+import com.example.codemaster.ui.leetcode_screen.font
 import com.example.codemaster.utils.UiEvent
 import com.madrapps.plot.line.DataPoint
 import com.madrapps.plot.line.LineGraph
 import com.madrapps.plot.line.LinePlot
+
+val font = FontFamily(Font(R.font.varelaround_regular))
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -58,8 +67,8 @@ fun CodeforcesScreen (
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    elevation = 20.dp,
-                    shape = RoundedCornerShape(20.dp)
+                    elevation = 5.dp,
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Column(modifier = Modifier.padding(10.dp) ) {
                         Row() {
@@ -75,22 +84,28 @@ fun CodeforcesScreen (
                             Column(modifier = Modifier.padding(10.dp)) {
                                     Text(
                                         text = "@${data.result[0].handle}",
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color(0xFF2A265C)
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = Color(0xFF2A265C),
+                                        fontFamily = font,
+                                        fontSize = 15.sp
                                     )
-                                    Text(text = data.result[0].rank)
-                                    Text(text = "Max Rating: ${data.result[0].rating}")
-                                    Text(text = "Rating: ${data.result[0].maxRating}")
+                                    Text(
+                                        text = data.result[0].rank,
+                                        fontFamily = font,
+                                        color = Color(0xFF2A265C),
+                                    )
+                                    Text(
+                                        text = "Max Rating: ${data.result[0].rating}",
+                                        fontFamily = font,
+                                        color = Color(0xFF2A265C),
+                                    )
+                                    Text(
+                                        text = "Rating: ${data.result[0].maxRating}",
+                                        fontFamily = font,
+                                        color = Color(0xFF2A265C),
+                                    )
                             }
                         }
-//                        Row(){
-//                            Column() {
-//                                    Text(text = "Max Rating: ${data.result[0].rating}")
-//                                    Text(text = "Rating: ${data.result[0].maxRating}")
-//                                    Text(text = "Country Rank: ${data.result[0].rank}")
-//                                    Text(text = "Global Rank: ${data.result[0].maxRank}")
-//                            }
-//                        }
                     }
                 }
             }
@@ -102,33 +117,38 @@ fun CodeforcesScreen (
             ){
                 Card(
                     modifier = Modifier
-                        .height(50.dp)
+                        .height(80.dp)
                         .width(140.dp),
+                    elevation = 5.dp,
                     onClick = {
                         codeforcesViewModel.onEvent(CodeforcesUiEvent.OnProblemsClick)
                     },
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
                         text = "PROBLEMS",
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.wrapContentSize()
+                        modifier = Modifier.wrapContentSize(),
+                        fontFamily = font,
+                        color = Color(0xFF2A265C),
                     )
                 }
                 Card(
                     modifier = Modifier
-                        .height(50.dp)
+                        .height(80.dp)
                         .width(140.dp),
                     onClick = {
                         codeforcesViewModel.onEvent(CodeforcesUiEvent.OnRatingsClick)
                     },
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = 20.dp
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 5.dp
                 ) {
                     Text(
                         text = "RATINGS",
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.wrapContentSize()
+                        modifier = Modifier.wrapContentSize(),
+                        fontFamily = font,
+                        color = Color(0xFF2A265C),
                     )
                 }
             }
@@ -136,10 +156,9 @@ fun CodeforcesScreen (
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = 20.dp
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 5.dp
                 ) {
-                    Text(text = "GRAPH")
                     CFGraph(graphData = graphData)
                 }
             }
@@ -161,18 +180,18 @@ fun CFGraph(graphData: Codeforces,){
             listOf(
                 LinePlot.Line(
                     lines[0],
-                    LinePlot.Connection(Color(0xFF6767C7), 1.dp),
-                    LinePlot.Intersection(Color(0xFF6767C7), 4.dp),
+                    LinePlot.Connection(Color(0xFF46468A), 1.dp),
+                    LinePlot.Intersection(Color(0xFF46468A), 4.dp),
                     LinePlot.Highlight(Color.Black, 4.dp),
-                    LinePlot.AreaUnderLine(Color(0xFFB9B9F8), 0.3f)
+                    LinePlot.AreaUnderLine(Color(0xffDEDEFA), 0.3f)
                 ),
                 LinePlot.Line(
                     lines[0],
-                    LinePlot.Connection(Color(0xFF6767C7), 2.dp),
+                    LinePlot.Connection(Color(0xFF46468A), 2.dp),
                     LinePlot.Intersection { center, _ ->
                         val px = 2.dp.toPx()
                         val topLeft = Offset(center.x - px, center.y - px)
-                        drawRect(Color(0xFF6767C7), topLeft, Size(px * 2, px * 2))
+                        drawRect(Color(0xFF46468A), topLeft, Size(px * 2, px * 2))
                     },
                 ),
             ),
@@ -209,7 +228,7 @@ fun MainCFSceen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(194, 169, 252, 255)
+                        color = Color(0xFFB3BCF8)
                     )
                 }
             is CodeforcesUiState.Failure -> ErrorDialog(state.message)

@@ -1,5 +1,6 @@
 package com.example.codemaster.ui.leetcode_screen
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,9 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,16 +24,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.MyApplication
+import com.example.codemaster.R
+import com.example.codemaster.WebViewActivity
 import com.example.codemaster.components.DonutChart
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.LinearProgressIndicatorSample
 import com.example.codemaster.data.model.Leetcode
+import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
 
+val font = FontFamily(Font(R.font.varelaround_regular))
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LeetcodeScreen(
     data: Leetcode
@@ -43,7 +58,8 @@ fun LeetcodeScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     backgroundColor = Color.White,
-                    elevation = 10.dp
+                    elevation = 5.dp,
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Column(modifier = Modifier.padding(10.dp) ) {
                         Column{
@@ -52,7 +68,8 @@ fun LeetcodeScreen(
                                     Text(
                                         text = "Easy",
                                         color = Color(0xFF00B7A2),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = font
                                     )
                                     Text(
                                         text = buildAnnotatedString {
@@ -62,7 +79,8 @@ fun LeetcodeScreen(
                                             pop()
                                         },
                                         textAlign = TextAlign.End,
-                                        modifier = Modifier.padding(start = 5.dp)
+                                        modifier = Modifier.padding(start = 15.dp),
+                                        fontFamily = font
                                     )
                                 }
                             }
@@ -74,12 +92,13 @@ fun LeetcodeScreen(
                                     trackColor = Color(0xFFDDEEE1)
                                 )
                             }
-                            Box {
+                            Box(modifier = Modifier.padding(top = 10.dp)) {
                                 Row{
                                     Text(
                                         text = "Medium",
                                         color = Color(0xFFFEBF1E),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = font
                                     )
                                     Text(
                                         text = buildAnnotatedString {
@@ -89,7 +108,8 @@ fun LeetcodeScreen(
                                             pop()
                                         },
                                         textAlign = TextAlign.End,
-                                        modifier = Modifier.padding(start = 5.dp)
+                                        modifier = Modifier.padding(start = 15.dp),
+                                        fontFamily = font
                                     )
                                 }
                             }
@@ -101,11 +121,12 @@ fun LeetcodeScreen(
                                     trackColor = Color(0xFFF1EDE1)
                                 )
                             }
-                            Box{
+                            Box(modifier = Modifier.padding(top = 10.dp)){
                                 Row{
                                     Text(
                                         text = "Hard",color = Color(0xFFEE4743),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = font,
                                     )
                                     Text(
                                         text = buildAnnotatedString {
@@ -115,7 +136,8 @@ fun LeetcodeScreen(
                                             pop()
                                         },
                                         textAlign = TextAlign.End,
-                                        modifier = Modifier.padding(start = 5.dp)
+                                        modifier = Modifier.padding(start = 15.dp),
+                                        fontFamily = font
                                     )
                                 }
                             }
@@ -128,15 +150,45 @@ fun LeetcodeScreen(
                                 )
                             }
                         }
-                        Row{
+                        Row(modifier = Modifier.padding(top = 10.dp)){
                             Column {
-                                    Text(text = "Acceptance Rate: ${data.acceptance_rate}")
-                                    Text(text = "Total Solved: ${data.total_problems_solved}")
-                                    Text(text = "Contribution: ${data.contribution_points}")
+                                Text(
+                                    text = "Acceptance Rate: ${data.acceptance_rate}",
+                                    fontFamily = font,
+                                    color = Color(0xFF2A265C),
+                                )
+                                Text(
+                                    text = "Total Solved: ${data.total_problems_solved}",
+                                    fontFamily = font,
+                                    color = Color(0xFF2A265C),
+                                )
                             }
                         }
-//
                     }
+                }
+            }
+            Row(modifier = Modifier.padding(10.dp)){
+                val url = "https://leetcode.com/problemset/all/"
+                Card(
+                    modifier = Modifier
+                        .height(80.dp)
+                        .fillMaxWidth(),
+                    onClick = {
+                        val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+                        myIntent.putExtra("key", url)
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        MyApplication.instance.startActivity(myIntent)
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 5.dp
+                ) {
+                    Text(
+                        text = "PROBLEMS",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.wrapContentSize(),
+                        fontFamily = font,
+                        color = Color(0xFF2A265C)
+                    )
                 }
             }
             Row(modifier = Modifier.padding(10.dp)) {
@@ -176,7 +228,7 @@ fun MainLCScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(194, 169, 252, 255)
+                        color = Color(0xFFB3BCF8)
                     )
                 }
             is LeetcodeUiState.Failure -> ErrorDialog(state.message)

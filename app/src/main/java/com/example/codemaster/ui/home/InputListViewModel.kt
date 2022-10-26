@@ -2,11 +2,13 @@ package com.example.codemaster.ui.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.codemaster.data.source.local.enitity.Username
 import com.example.codemaster.data.source.repository.ContestRepository
+import com.example.codemaster.utils.Nav
 import com.example.codemaster.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -48,7 +50,6 @@ class InputListViewModel @Inject constructor(
             lc = repository.getUsername(1)?.leetcode ?: "leetcode"
         }
     }
-
     fun onEvent(event : InputListEvent) {
         when (event) {
             is InputListEvent.OnCCUsernameChange -> {
@@ -70,6 +71,7 @@ class InputListViewModel @Inject constructor(
                         )
                     )
                 }
+                sendUiEvent(UiEvent.Navigate(Nav.CONTESTS.route))
             }
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.codemaster.utils.UiEvent
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 
@@ -26,8 +27,18 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
+    onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: InputListViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Navigate -> onNavigate(event)
+                else -> Unit
+            }
+
+        }
+    }
     val state by viewModel.uiState.collectAsState()
     Box (modifier = Modifier.background(Color.Cyan)) {
         Column {

@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 // Dao Model class
 @Entity
 data class Username(
-
     @PrimaryKey
     val id: Int = 1,
     val codechef : String?,
