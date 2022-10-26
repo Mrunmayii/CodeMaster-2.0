@@ -87,6 +87,13 @@ fun HomeScreen(
             .padding(bottom = 10.dp))
         CustomTextField(value = viewModel.LCusername, platform = "leetcode")
         Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = {
+                viewModel.onEvent(InputListEvent.OnClick)
+            }
+        ){
+            Text(text = "Save")
+        }
     }
 }
 
