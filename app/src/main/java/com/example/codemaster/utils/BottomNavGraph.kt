@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +31,8 @@ fun NavigationGraph(
             TabView(
                 topBar = { TopAppBar(
                     title = "CODEMASTER",
-                    onNavigate = { navController.navigate(Nav2.HOME.route) }
+                    onNavigate = { navController.navigate(Nav2.HOME.route) },
+                    height = 5.dp
                 ) },
                 intent
             )
@@ -40,7 +42,8 @@ fun NavigationGraph(
                 topBar = {
                     TopAppBar(
                         title = "CODECHEF",
-                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                        onNavigate = { navController.navigate(Nav2.HOME.route) },
+                        height = 2.dp
                     )
                 }
             )
@@ -51,7 +54,8 @@ fun NavigationGraph(
                 topBar = {
                     TopAppBar(
                         title = "CODEFORCES",
-                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                        onNavigate = { navController.navigate(Nav2.HOME.route) },
+                        height = 2.dp
                     )
                 }
             )
@@ -61,13 +65,14 @@ fun NavigationGraph(
                 topBar = {
                     TopAppBar(
                         title = "LEETCODE",
-                        onNavigate = { navController.navigate(Nav2.HOME.route) }
+                        onNavigate = { navController.navigate(Nav2.HOME.route) },
+                        height = 2.dp
                     )
                 }
             )
         }
         composable(Nav2.HOME.route){
-            HomeScreen()
+            HomeScreen(onNavigate = { navController.navigate(Nav.CONTESTS.route) })
         }
         composable(Nav2.CFPROBLEMS.route){
             CFProblemScreen()

@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,11 +32,12 @@ import com.example.codemaster.ui.codeforces_screen.CodeforcesViewModel
 import com.example.codemaster.utils.UiEvent
 
 
-val font = FontFamily(Font(R.font.acme_regular))
+val font = FontFamily(Font(R.font.varelaround_regular))
 @Composable
 fun TopAppBar(
     title : String,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    height: Dp,
     topBarViewModel: TopBarViewModel = hiltViewModel()
 ) {
 //    TopAppBar(
@@ -66,10 +69,11 @@ fun TopAppBar(
             Text(
                 text = title,
                 style = TextStyle(color = Color.Black),
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 modifier = Modifier.padding(start = 20.dp, top = 10.dp),
                 textAlign = TextAlign.Start,
-                fontFamily = font
+                fontFamily = font,
+                fontWeight = FontWeight.ExtraBold
             )
 
             IconButton(
@@ -80,11 +84,12 @@ fun TopAppBar(
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "null",
+                    tint = Color(0xFF2A265C)
                 )
             }
         }
     }
-    Spacer(modifier = Modifier.height(5.dp))
+    Spacer(modifier = Modifier.height(height = height))
 
     LaunchedEffect(key1 = true) {
         topBarViewModel.uiEvent.collect { event ->

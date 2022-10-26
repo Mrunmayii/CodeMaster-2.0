@@ -25,6 +25,9 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Tab
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.codemaster.R
 import com.example.codemaster.ui.contest_screen.FutureContest
 import com.example.codemaster.ui.contest_screen.Ongoing
 import com.example.codemaster.ui.contest_screen.OngoingCard
@@ -96,8 +99,9 @@ fun Tabs(pagerState: PagerState) {
                 text = {
                     Text(
                         text = list[index],
-                        color = if (pagerState.currentPage == index) Color.Black else Color.LightGray,
-                        fontSize = 14.sp
+                        color = if (pagerState.currentPage == index) Color(0xFF2A265C) else Color.LightGray,
+                        fontSize = 14.sp,
+                        fontFamily = font
                     )
                 },
                 selected = pagerState.currentPage == index,

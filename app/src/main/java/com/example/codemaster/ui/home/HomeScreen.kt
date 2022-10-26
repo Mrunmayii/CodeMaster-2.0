@@ -42,12 +42,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.codemaster.components.AlertBox
 import com.example.codemaster.components.CustomTextField
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import com.example.codemaster.utils.UiEvent
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
-    viewModel : InputListViewModel = hiltViewModel()
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    viewModel: InputListViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Navigate -> onNavigate(event)
+                else -> Unit
+            }
+
+        }
+    }
     val state by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
@@ -96,77 +110,3 @@ fun HomeScreen(
         }
     }
 }
-
-//    val keyMap = remember { mutableMapOf("codechef" to "", "codeforces" to "", "leetcode" to "") }
-//    Column(modifier = Modifier
-//        .fillMaxSize()
-//        .padding(30.dp))
-//    {
-//        Cardd(platform = "codechef", viewModel.cc,viewModel.CCusername,keyMap)
-//        Spacer(modifier = Modifier.padding(10.dp))
-//        Cardd(platform = "codeforces", viewModel.cf,viewModel.CFusername,keyMap)
-//        Spacer(modifier = Modifier.padding(10.dp))
-//        Cardd(platform = "leetcode", viewModel.lc, viewModel.LCusername,keyMap)
-//        Spacer(modifier = Modifier.padding(10.dp))
-//        Button(
-//            onClick = {
-//                viewModel.onEvent(InputListEvent.OnClick)
-//                Log.d("kk", keyMap.toString())
-//            }
-//        ){
-//
-//        }
-//
-//    }
-//}
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun Cardd(
-//    platform: String,
-//    username: String,
-//    value : String,
-//    keyMap : MutableMap<String, String>
-//){
-//    val openDialog = remember { mutableStateOf(false) }
-//    if (openDialog.value) {
-//        AlertBox(
-//            platform = platform,
-//            openDialog = openDialog.value,
-//            onDismiss = { openDialog.value = false },
-//            value = value,
-//            keyMap = keyMap
-//        )
-//    }
-//    Card(
-//        modifier = Modifier
-//            .size(height = 65.dp, width = 3000.dp)
-//            .padding(bottom = 5.dp),
-//        colors = CardDefaults.cardColors(
-//            Color(241, 233, 255, 255)
-//        ),
-//        shape = RoundedCornerShape(5.dp),
-//        onClick = {
-//            openDialog.value = true
-//        }
-//    ) {
-//        Row(
-//            modifier = Modifier,
-//            horizontalArrangement = Arrangement.SpaceEvenly
-//        ) {
-//            Text(
-//                text = platform,
-//                modifier = Modifier
-//                    .padding(20.dp),
-//                textAlign = TextAlign.Center
-//            )
-//            Text(
-//                text = username,
-//                modifier = Modifier.padding(20.dp),
-//                textAlign = TextAlign.Center,
-//                color = Color.Black
-//            )
-//            Log.d("kalpp",username)
-//        }
-//    }
-

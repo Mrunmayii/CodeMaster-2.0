@@ -1,11 +1,13 @@
 package com.example.codemaster.ui.codechef_screen
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,18 +21,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.example.codemaster.MyApplication
+import com.example.codemaster.R
+import com.example.codemaster.WebViewActivity
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.data.model.Codechef
 import com.madrapps.plot.line.DataPoint
 import com.madrapps.plot.line.LineGraph
 import com.madrapps.plot.line.LinePlot
 
+val font = FontFamily(Font(R.font.varelaround_regular))
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CodechefScreen(
     data:Codechef
@@ -45,7 +55,7 @@ fun CodechefScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    elevation = 2.dp,
+                    elevation = 5.dp,
                     shape = RoundedCornerShape(10.dp),
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
@@ -62,13 +72,17 @@ fun CodechefScreen(
                             Column(modifier = Modifier.padding(10.dp)) {
                                 Text(
                                     text = "@${data.username}",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF2A265C)
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color(0xFF2A265C),
+                                    fontFamily = font,
+                                    fontSize = 15.sp,
                                 )
                                 Row {
                                     Text(
                                         text = data.div,
-                                        modifier = Modifier.padding(end = 15.dp)
+                                        modifier = Modifier.padding(end = 15.dp),
+                                        fontFamily = font,
+                                        color = Color(0xFF2A265C),
                                     )
                                     Text(
                                         text = data.stars,
@@ -85,21 +99,54 @@ fun CodechefScreen(
                                         else if (data.rating < "2500" && data.rating >= "2200")
                                             Color(0xFFFE7F00)
                                         else
-                                            Color.Red
+                                            Color.Red,
+                                        fontFamily = font
                                     )
                                 }
-                                Text(text = "Max Rating: ${data.max_rating}")
-                                Text(text = "Rating: ${data.rating}")
+                                Text(
+                                    text = "Max Rating: ${data.max_rating}",
+                                    fontFamily = font,
+                                    color = Color(0xFF2A265C),
+                                )
+                                Text(
+                                    text = "Rating: ${data.rating}",
+                                    fontFamily = font,
+                                    color = Color(0xFF2A265C),
+                                )
                             }
                         }
                     }
+                }
+            }
+            Row(modifier = Modifier.padding(10.dp)){
+                val url = "https://www.codechef.com/practice?end_rating=999&group=all&hints=0&itm_campaign=problems&itm_medium=home&limit=20&page=0&search=&sort_by=difficulty_rating&sort_order=asc&start_rating=0&tags=&topic=&video_editorial=0&wa_enabled=0"
+                Card(
+                    modifier = Modifier
+                        .height(80.dp)
+                        .fillMaxWidth(),
+                    onClick = {
+                        val myIntent = Intent(MyApplication.instance, WebViewActivity::class.java)
+                        myIntent.putExtra("key", url)
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        MyApplication.instance.startActivity(myIntent)
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 5.dp
+                ) {
+                    Text(
+                        text = "PROBLEMS",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.wrapContentSize(),
+                        fontFamily = com.example.codemaster.ui.leetcode_screen.font,
+                        color = Color(0xFF2A265C),
+                    )
                 }
             }
             Row(modifier = Modifier.padding(10.dp)) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    elevation = 2.dp,
+                    elevation = 5.dp,
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     CCGraph(data = data)
@@ -124,18 +171,18 @@ fun CCGraph(data:Codechef){
             listOf(
                 LinePlot.Line(
                     lines[0],
-                    LinePlot.Connection(Color(0xFF6767C7), 1.dp),
-                    LinePlot.Intersection(Color(0xFF6767C7), 4.dp),
+                    LinePlot.Connection(Color(0xFF46468A), 1.dp),
+                    LinePlot.Intersection(Color(0xFF46468A), 4.dp),
                     LinePlot.Highlight(Color.Black, 4.dp),
                     LinePlot.AreaUnderLine(Color(0xffDEDEFA), 0.3f)
                 ),
                 LinePlot.Line(
                     lines[0],
-                    LinePlot.Connection(Color(0xFF6767C7), 2.dp),
+                    LinePlot.Connection(Color(0xFF46468A), 2.dp),
                     LinePlot.Intersection { center, _ ->
                         val px = 2.dp.toPx()
                         val topLeft = Offset(center.x - px, center.y - px)
-                        drawRect(Color(0xFF6767C7), topLeft, Size(px * 2, px * 2))
+                        drawRect(Color(0xFF46468A), topLeft, Size(px * 2, px * 2))
                     },
                 ),
             ),
@@ -177,7 +224,7 @@ fun Setdetail(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(194, 169, 252, 255)
+                        color = Color(0xFFB3BCF8)
                     )
                 }
             is CodechefUiState.Failure -> ErrorDialog(state.message)
