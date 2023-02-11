@@ -8,7 +8,7 @@ import retrofit2.http.Path
 interface LeetcodeApi {
 
     // leetcode
-    @GET("leetcode/{userName}")
+    @GET("/{userName}")
     suspend fun getLeetcode(
         @Path("userName") userName : String
     ) : Response<Leetcode>
