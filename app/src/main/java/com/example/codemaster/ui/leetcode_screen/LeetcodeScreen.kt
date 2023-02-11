@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -38,7 +37,6 @@ import com.example.codemaster.components.DonutChart
 import com.example.codemaster.components.ErrorDialog
 import com.example.codemaster.components.LinearProgressIndicatorSample
 import com.example.codemaster.data.model.Leetcode
-import com.example.codemaster.ui.codeforces_screen.CodeforcesUiEvent
 
 val font = FontFamily(Font(R.font.varelaround_regular))
 
@@ -62,7 +60,17 @@ fun LeetcodeScreen(
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Column(modifier = Modifier.padding(10.dp) ) {
-                        Column{
+                        Row(modifier = Modifier.padding(bottom = 10.dp)){
+                            Column {
+                                Text(
+                                    text = "@${data.username}",
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontFamily = font,
+                                    color = Color(0xFF2A265C),
+                                )
+                            }
+                        }
+                        Column(modifier = Modifier.padding(bottom = 10.dp)){
                             Box{
                                 Row{
                                     Text(
@@ -150,20 +158,11 @@ fun LeetcodeScreen(
                                 )
                             }
                         }
-                        Row(modifier = Modifier.padding(top = 10.dp)){
-                            Column {
-                                Text(
-                                    text = "Acceptance Rate: ${data.acceptance_rate}",
-                                    fontFamily = font,
-                                    color = Color(0xFF2A265C),
-                                )
-                                Text(
-                                    text = "Total Solved: ${data.total_problems_solved}",
-                                    fontFamily = font,
-                                    color = Color(0xFF2A265C),
-                                )
-                            }
-                        }
+                        Text(
+                            text = "Total Solved: ${data.total_problems_solved}",
+                            fontFamily = font,
+                            color = Color(0xFF2A265C),
+                        )
                     }
                 }
             }

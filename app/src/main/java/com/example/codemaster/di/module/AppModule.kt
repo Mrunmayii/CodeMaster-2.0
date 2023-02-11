@@ -33,7 +33,7 @@ object AppModule {
     @Named("Leetcode")
     fun providesLeetcodeApi(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://competitive-coding-api.herokuapp.com/api/")
+            .baseUrl("https://leetcode-api-five.vercel.app")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -43,7 +43,7 @@ object AppModule {
     @Named("CFCC")
     fun providesCfCcApi(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://contest-details.herokuapp.com/api/")
+            .baseUrl("https://contest-api.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
